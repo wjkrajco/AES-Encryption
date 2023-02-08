@@ -13,10 +13,13 @@ operation.o: operation.c operation.h
 
 
 infix_12: infix.o number_12.o operation.o
+	gcc infix.o number_12.o operation.o -o infix_12
 
 infix.o: infix.c operation.h number.h
+	gcc -g -Wall -std=c99   -c -o infix.o infix.c
 
 number_12.o: number_12.c number.h operation.h
+	gcc -c -Wall -std=c99 -g number_12.c -o number_12.o
 
 operation.o: operation.c operation.h
 

@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "number.h"
+#include "operation.h"
 
 
 int skip_space()    

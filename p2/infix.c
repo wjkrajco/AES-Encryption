@@ -6,74 +6,6 @@
 #include "operation.h"
 
 
-// static long parse_exp()    
-// {
-//     char ch = getchar();
-
-//     long total = 0;
-
-//     //Temporary
-//     long temp = 0;
-
-//     bool isNegative = false;
-
-//     bool wasNumber = false;
-
-//     int whiteSpaceValue = 0;
-
-//     while (ch != '*' && ch != '/' && ch != '+')    {
-
-//         if (ch == '-')    {
-//             ch = getchar();
-//             if (ch == ' ' || ch == '\t' || ch == '\v' || ch == '\f' || ch == '\r' || ch == '\n' )    {
-//                 ungetc(ch, stdin);
-//                 if (!wasNumber)    {
-//                     exit(100);
-//                 }
-//                 return total;
-//             }
-//             isNegative = true;
-//         }
-//         if (ch >= '0' && ch <= '9' )    {
-//             wasNumber = true;
-//             if (isNegative)    {
-//                 ungetc(ch, stdin);
-//                 temp = parse_value();
-//                 if (temp != LONG_MIN)    {
-//                     total = times(-1, temp);
-//                 }
-//                 else {
-//                     total = temp;
-//                 }
-//             }
-//             else    {
-//                 ungetc(ch, stdin);
-//                 total = parse_value();
-//             }
-            
-//         }
-
-//         else if (ch == ' ' || ch == '\t' || ch == '\v' || ch == '\f' || ch == '\r' || ch == '\n')    {
-//             ungetc(ch, stdin);
-//             whiteSpaceValue = skip_space();
-//             if (whiteSpaceValue == -1)    {
-//                 if (!wasNumber)    {
-//                     exit(100);
-//                 }
-//                 return total;
-//             }
-//         }
-
-//         ch = getchar();
-//     }
-
-//     ungetc(ch, stdin);
-//     if (!wasNumber)    {
-//         exit(100);
-//     }
-//     return total;
-// }
-
 static long parse_exp()    
 {
     char ch = getchar();
@@ -104,7 +36,7 @@ static long parse_exp()
             if (ch == ' ' || ch == '\t' || ch == '\v' || ch == '\f' || ch == '\r' || ch == '\n' )    {
                 ungetc(ch, stdin);
                 if (!wasNumber || isExponent)    {
-                    exit(100);
+                    exit(102);
                 }
                 return total;
             }
@@ -142,7 +74,7 @@ static long parse_exp()
             whiteSpaceValue = skip_space();
             if (whiteSpaceValue == -1)    {
                 if (!wasNumber || isExponent)    {
-                    exit(100);
+                    exit(102);
                 }
                 return total;
             }
@@ -153,7 +85,7 @@ static long parse_exp()
 
     ungetc(ch, stdin);
     if (!wasNumber || isExponent)    {
-        exit(100);
+        exit(102);
     }
     return total;
 }
