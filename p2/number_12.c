@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <limits.h>
 #include "number.h"
 #include "operation.h"
 
@@ -61,6 +62,13 @@ long parse_value()
         }
         value = times(value, 12);
 
+
+        if (LONG_MIN == minus(-value, digit))    {
+            ch = getchar();
+            ungetc(ch, stdin);
+            return LONG_MIN;
+        }
+
         value = plus(value, digit);
 
         ch = getchar();
@@ -76,27 +84,29 @@ long parse_value()
 
 }
 
-void print_value ( long val )    
+void print_value (long val) 
 {
-    long d = val % 12;
+    if (val < 0) {
+        val = -val;
+        putchar('-');
+    }
 
-    char ch;
-
-    
-    if ( val >= 12 )    {
-        print_value ( val / 12 );
+    if (val == 0) {
+        putchar('0');
+    } else {
+        long d = val % 12;
+        char ch;
+        if (d == 10) {
+            ch = 'X';
+        } else if (d == 11) {
+            ch = 'E';
+        } else {
+            ch = d + '0';
+        }
+        if (val >= 12) {
+            print_value(val / 12);
+        }
+        putchar(ch);
     }
-    
-    if ( d == 10 )    {
-        ch = 'X';
-    }
-    else if ( d == 11 )    {
-        ch = 'E';
-    }
-    else    {
-        ch = plus(d, '0');
-    }
-    putchar(ch);
-
 }
 

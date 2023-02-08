@@ -42,7 +42,7 @@ static long parse_exp()
             }
             isNegative = true;
         }
-        if (ch >= '0' && ch <= '9' )    {
+        if ((ch >= '0' && ch <= '9') || ch == 'X' || ch == 'E' )    {
             wasNumber = true;
             canBeExponent = true;
             if (isNegative)    {
@@ -164,7 +164,7 @@ int main()
             total = plus(total, parse_mul_div());
         }
 
-        else if ((ch >= '0' && ch <= '9') || ch == '-')   {
+        else if ((ch >= '0' && ch <= '9') || ch == 'X' || ch == 'E'  || ch == '-')   {
             passedThrough = true;
             ungetc(ch, stdin);
             total = plus(total, parse_mul_div());
