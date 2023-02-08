@@ -246,6 +246,7 @@ int main()
     }
 
     print_value(total);
+    putchar('\n');
 
     return EXIT_SUCCESS;
 

@@ -22,4 +22,5 @@ operation.o: operation.c operation.h
 
 clean:
 	rm -f *.o
+	rm -f infix_10 infix_12
 	rm -f output.txt
