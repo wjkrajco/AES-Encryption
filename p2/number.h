@@ -8,6 +8,18 @@
 /** Exit status indicating that the program was given invalid input. */
 #define FAIL_INPUT 102
 
+/** Allows digits to move from one place to another, which allows for the parsing of a value.*/
+#define MOVE_A_PLACE 10
+
+/** A twelve for the the based twelve system*/
+#define BASE_TWELEVE 12
+
+/** Value for the letter X in the base 12 system*/
+#define X_BASE_TWELVE_VALUE 10
+
+/** Value for the letter E in the base 12 system*/
+#define E_BASE_TWELVE_VALUE 11
+
 /** 
     This is the skip_space function that reads in inputs of white spaces so the program
     can easily skip past any white space. If the input is not white space it reutrns what 

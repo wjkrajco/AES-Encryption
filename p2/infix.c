@@ -1,3 +1,11 @@
+/** 
+    @file infix.c 
+    @author William J Krjacovic (wjkrajco)
+    This is the part of the program that houses the main function and is what scans
+    through the mathmatical equations to come up with a solution. This program parses through the 
+    exponenets and the mutiliplication and division of the equaiton.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -5,7 +13,16 @@
 #include "number.h"
 #include "operation.h"
 
+/** This is the exit result that is given if no input was able to be printed due to improper formatting.*/
+#define EXIT_WITH_NO_INPUT 102
 
+
+/** 
+    Parses through an equation looking for exponential values. This function adds up all the value
+    individually returning them to be totaled and eventually added or subtracted by the main function.
+
+    @return The value currently being parsed.
+*/
 static long parse_exp()    
 {
     char ch = getchar();
@@ -36,7 +53,7 @@ static long parse_exp()
             if (ch == ' ' || ch == '\t' || ch == '\v' || ch == '\f' || ch == '\r' || ch == '\n' )    {
                 ungetc(ch, stdin);
                 if (!wasNumber || isExponent)    {
-                    exit(102);
+                    exit(EXIT_WITH_NO_INPUT);
                 }
                 return total;
             }
@@ -74,7 +91,7 @@ static long parse_exp()
             whiteSpaceValue = skip_space();
             if (whiteSpaceValue == -1)    {
                 if (!wasNumber || isExponent)    {
-                    exit(102);
+                    exit(EXIT_WITH_NO_INPUT);
                 }
                 return total;
             }
@@ -85,12 +102,19 @@ static long parse_exp()
 
     ungetc(ch, stdin);
     if (!wasNumber || isExponent)    {
-        exit(102);
+        exit(EXIT_WITH_NO_INPUT);
     }
     return total;
 }
 
+/** 
+    This function reads through the input and collects the blocks of equations that are
+    being added or subtract. It utilizes the parse_exp function to gather the values of the all the
+    numbers inbetween the blocks of pluses and minuses, taking in those values to send back block totals
+    back to main to be subtracted or added.
 
+    @return The value of the block of the equation
+*/
 static long parse_mul_div()    
 {
     char ch;
@@ -142,7 +166,14 @@ static long parse_mul_div()
 
 }
 
+/** 
+    This is the main function of the program. This function reads in the first parts of the
+    input and begins to call parse_mul_div through either addition or subtraction whether the input
+    asks for the next block of equation to be subtracted or added to the total. The function then calls for the
+    result to be printed.
 
+    @return EXIT_SUCESS if the program completes
+*/
 int main()    
 {
     char ch = getchar();

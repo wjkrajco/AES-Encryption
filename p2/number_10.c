@@ -14,29 +14,6 @@
 #include "operation.h"
 
 
-// int skip_space()    
-// {
-
-//     char ch;
-
-//     while ( (ch = getchar()) != EOF )   {
-
-//         if (ch == '\n')    {
-//             ungetc(ch, stdin);
-//             return EOF;
-//         }
-
-//         if ( ch != ' ' && ch != '\t' && ch != '\v' && ch != '\f' && ch != '\r')    {
-//             ungetc(ch, stdin);
-//             return (int)ch;
-//         }
-
-//     }
-
-//     return EOF;
-
-// }
-
 int skip_space()    
 {
 
@@ -77,7 +54,7 @@ long parse_value()
     while (ch >= '0' && ch <= '9')    {
         digit = minus((long)ch,'0');
 
-        value = times(value, (long)10);
+        value = times(value, (long)MOVE_A_PLACE);
 
         if (LONG_MIN == minus(-value, digit))    {
             ch = getchar();
@@ -112,10 +89,10 @@ void print_value ( long val )
     if (val == 0) {
         putchar('0');
     } else {
-        long d = val % 10;
+        long d = val % MOVE_A_PLACE;
         char ch = d + '0';
-        if (val >= 10) {
-            print_value(val / 10);
+        if (val >= MOVE_A_PLACE) {
+            print_value(val / MOVE_A_PLACE);
         }
         putchar(ch);
     }

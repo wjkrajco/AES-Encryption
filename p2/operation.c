@@ -11,16 +11,18 @@
 #include <limits.h>
 #include "operation.h"
 
+
+
 extern long plus ( long a, long b )    
 {
     long value = a + b;
 
     if ( a > 0 && b > 0 && value < 0 )    {
-        exit(100);
+        exit(OVERFLOW_EXIT);
     }
 
     if ( a < 0 && b < 0 && value > 0 )    {
-        exit(100);
+        exit(OVERFLOW_EXIT);
     }
 
     return value;
@@ -39,7 +41,7 @@ long times ( long a, long b )
     if ( a > 0 && b > 0)    {
         x = LONG_MAX / b;
         if ( a > x )    {
-            exit(100);
+            exit(OVERFLOW_EXIT);
         }
         else {
             return a * b;
@@ -49,7 +51,7 @@ long times ( long a, long b )
     if ( a < 0 && b < 0)    {
         x = LONG_MAX / b;
         if ( a < x )    {
-            exit(100);
+            exit(OVERFLOW_EXIT);
         }
         else {
             return a * b;
@@ -58,11 +60,11 @@ long times ( long a, long b )
 
     if ( a > 0 && b < 0)    {
         if (b == -1 && a == LONG_MIN)    {
-            exit(100);
+            exit(OVERFLOW_EXIT);
         }
         x = LONG_MIN / b;
         if (a > x)    {
-            exit(100);
+            exit(OVERFLOW_EXIT);
         }
         else {
             return a * b;
@@ -71,11 +73,11 @@ long times ( long a, long b )
 
     if ( a < 0 && b > 0)    {
         if ( a == LONG_MIN && b == -1 )    {
-            exit(100);
+            exit(OVERFLOW_EXIT);
         }
         x = LONG_MIN / b;
         if (a < x)    {
-            exit(100);
+            exit(OVERFLOW_EXIT);
         }
         else {
             return a * b;
@@ -110,11 +112,11 @@ long divide ( long a, long b )
 {
 
     if ( b == 0 )    {
-        exit(101);
+        exit(DIVIDE_BY_ZERO_EXIT);
     }
 
     if (a == LONG_MIN && b == -1)    {
-        exit(100);
+        exit(OVERFLOW_EXIT);
     }
 
     return a / b;

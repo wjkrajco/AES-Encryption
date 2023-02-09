@@ -1,9 +1,15 @@
 /** 
     @file operation.h 
     @author William J Krjacovic (wjkrajco)
-    This is the header file for operation which contain the block comments
-    for the arithmetic functions located in operation.c
+    This is the header file for operation which contains the block comments
+    for the arithmetic functions plus, minus, times, divide and exponential located in operation.c
 */
+
+/** This is the exit status given if an overflow occurs. */
+#define OVERFLOW_EXIT 100
+
+/** The exit status returned from dividing by zero. */
+#define DIVIDE_BY_ZERO_EXIT 101
 
 /** 
     This function adds the parameters a and b. If there is an overflow
@@ -17,7 +23,7 @@
 long plus ( long a, long b );
 
 /** 
-    This function minues the parameters a and b. If there is an overflow
+    This function minuses the parameters a and b. If there is an overflow
     then the function exits with the status of 100. The function utlizes the
     plus function to get its result;
 

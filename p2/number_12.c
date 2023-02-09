@@ -12,7 +12,6 @@
 #include "number.h"
 #include "operation.h"
 
-
 int skip_space()    
 {
 
@@ -55,12 +54,12 @@ long parse_value()
             digit = minus((long)ch, '0');
         }
         else if (ch == 'X')   {
-            digit = 10;
+            digit = X_BASE_TWELVE_VALUE;
         }
         else    {
-            digit = 11;            
+            digit = E_BASE_TWELVE_VALUE;            
         }
-        value = times(value, 12);
+        value = times(value, BASE_TWELEVE);
 
 
         if (LONG_MIN == minus(-value, digit))    {
@@ -89,22 +88,27 @@ void print_value (long val)
     if (val < 0) {
         val = -val;
         putchar('-');
+
+        if (val == LONG_MIN) {
+            printf("41X792678515120368");
+            return;
+        }
     }
 
     if (val == 0) {
         putchar('0');
     } else {
-        long d = val % 12;
+        long d = val % BASE_TWELEVE;
         char ch;
-        if (d == 10) {
+        if (d == X_BASE_TWELVE_VALUE) {
             ch = 'X';
-        } else if (d == 11) {
+        } else if (d == E_BASE_TWELVE_VALUE) {
             ch = 'E';
         } else {
             ch = d + '0';
         }
-        if (val >= 12) {
-            print_value(val / 12);
+        if (val >= BASE_TWELEVE) {
+            print_value(val / BASE_TWELEVE);
         }
         putchar(ch);
     }
