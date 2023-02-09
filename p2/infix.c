@@ -95,6 +95,11 @@ static long parse_exp()
                 }
                 return total;
             }
+
+            if (whiteSpaceValue != '*' && whiteSpaceValue != '+' && whiteSpaceValue != '-' && whiteSpaceValue != '^' && whiteSpaceValue != '/' && (whiteSpaceValue < '0' ||
+                whiteSpaceValue > '9') && whiteSpaceValue != 'X' && whiteSpaceValue != 'E')    {
+                    exit(EXIT_WITH_NO_INPUT);
+            }
         }
 
         ch = getchar();
@@ -129,11 +134,7 @@ static long parse_mul_div()
 
     while (ch != '+' && ch != '\n' && ch != EOF)    {
 
-        if (ch == '+')    {
-            return total;
-        }
-
-        else if (ch == '*')    {
+        if (ch == '*')    {
             firstPass = false;
             temp = parse_exp();
             total = times(total, temp);
@@ -145,10 +146,16 @@ static long parse_mul_div()
             total = divide(total, temp);
         }
 
-        else if ((ch == ' ' || ch == '\t' || ch == '\v' || ch == '\f' || ch == '\r' || ch == '\n') && !firstPass)    {
+        else if ((ch == ' ' || ch == '\t' || ch == '\v' || ch == '\f' || ch == '\r') && !firstPass)    {
             ungetc(ch, stdin);
             return total;
         }
+
+        else if (((ch != ' ' && ch != '\t' && ch != '\v' && ch != '\f' && ch != '\r' && ch != '*' && ch != '/') && !(ch >= '0' && ch <= '9') &&
+         ch != 'X' && ch != 'E'  && ch != '-'))    {
+            exit(102);
+         }
+
         else {
             firstPass = false;
             ungetc(ch, stdin);

@@ -62,7 +62,7 @@ long times ( long a, long b )
         if (b == -1 && a == LONG_MIN)    {
             exit(OVERFLOW_EXIT);
         }
-        x = LONG_MIN / b;
+        x = (LONG_MIN + 1) / b;
         if (a > x)    {
             exit(OVERFLOW_EXIT);
         }
