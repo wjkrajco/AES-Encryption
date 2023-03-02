@@ -26,6 +26,9 @@
 /** The ASCII value for the largest digit */
 #define DIGIT_MAXIMUM 57
 
+/** A ten used to divide by number to take away the first digit in the int*/
+#define BASE_10 10
+
 /** Lines of context to show around an identifier. */
 static int context = 0;
 
@@ -34,6 +37,16 @@ static bool numbers = false;
   
 /** True if we're showing operators (for the extra credit). */
 // static bool operators = false;
+
+static bool isNum(int index, char *argv[])  {
+  bool isNum = true;
+  for (int i = 0; i < strlen(argv[index]); i++)  {
+    if (!((argv[index][i] >= DIGIT_MINIMUM) && (argv[index][i] <= DIGIT_MAXIMUM)))  {
+      isNum = false;
+    }
+  }
+  return isNum;
+}
 
 /** 
     This function processes the arguments that were passed into the program specifically only the optional
@@ -45,45 +58,27 @@ static bool numbers = false;
 static void processArgs( int argc, char *argv[] )  
 {
   bool contextBool = false;
-  bool isNum = false;
-  bool isCurrentNum = false;
 
-  if ( ( argc - 1 ) > REQUIRED_ARGS ) {
-    for ( int i = 1; i < argc - REQUIRED_ARGS; i++ )  {
-      for ( int j = 0; j < strlen( argv[i] ); j++ )  {
-        if ( ( int )argv[i][j] >= DIGIT_MINIMUM && ( int )argv[i][j] <= DIGIT_MAXIMUM )  {
-          if ( !contextBool )  {
-            fprintf( stderr, "usage: ident [-c <context>] [-n] <file> <identifier>\n" );
-            exit(1);
-          }
-          else  {
-            isCurrentNum = true;
-            isNum = true;
-          }
-
-        }
-        if (isCurrentNum)  {
-          fprintf( stderr, "usage: ident [-c <context>] [-n] <file> <identifier>\n" );
-          exit(1);
-        }
-        isCurrentNum = false;
-      }
-
-      if (isNum)  {
-        context = atoi(argv[i]);
-      }
-
-      else if ( strcmp(argv[i], "-n") == 0 )  {
-        numbers = true;
-      }
-      else if ( strcmp(argv[i], "-c") == 0 )  {
-        contextBool = true;
-      }
-      else  {
-        fprintf( stderr, "usage: ident [-c <context>] [-n] <file> <identifier>\n" );
-        exit(1);
-      }
+  if ((argc - 1) < REQUIRED_ARGS) { 
+    fprintf( stderr, "usage: ident [-c <context>] [-n] <file> <identifier>\n" );
+    exit(1);
+  }
+  for (int i = 1; i < argc - REQUIRED_ARGS; i++)  {
+    if (strcmp("-n", argv[i]) == 0)  {
+      numbers = true;
     }
+    else if (strcmp("-c", argv[i]) == 0)  {
+      contextBool = true;
+    }
+    else if (isNum(i, argv) && contextBool)  {
+      context = atoi(argv[i]);
+    }
+    else {
+      fprintf( stderr, "usage: ident [-c <context>] [-n] <file> <identifier>\n" );
+      exit(1);
+    }
+
+
   }
 }
 
@@ -193,7 +188,15 @@ static void processArgs( int argc, char *argv[] )
 //   return EXIT_SUCCESS;
 // }
 
-
+static int countDigits(int numLines)  
+{
+  int digits = 0;
+  while (numLines != 0)  {
+    numLines = numLines / 10;
+    ++digits;
+  }
+  return digits;
+}
 
 int main( int argc, char *argv[] )  
 {
@@ -215,26 +218,65 @@ int main( int argc, char *argv[] )
   }
 
   int numLines = countLines( fp );
+  int digits = countDigits(numLines);
+
+  char line[LINE_LIMIT + 1];
+  int color[LINE_LIMIT];
+  int lineNumberCounter = 0;
+
   if ( context > 0 )  {
     char historyArr[context][LINE_LIMIT + 1];
     char line[LINE_LIMIT + 1];
+    int nums[context];
     int color[LINE_LIMIT];
     int lineCounter = 0;
     int lineNumberCounter = 0;
-    bool lastLineProcessed = false;
+    bool justPrinted = false;
+    int counter = 0;
+
     while ( readLine( fp, line ) )  {
       lineNumberCounter++;
+
+      if (justPrinted)  {
+        counter++;
+        if (counter == context) {
+          justPrinted = false;
+        }
+        if (markIdentifier( argv[argc - 1], line, color)) {
+          justPrinted = false;
+        }
+        else {
+          if (numbers) {
+            printf( "%*d: ", digits, lineNumberCounter);
+            printLine( line, color );
+            continue;
+          }
+          else {
+            printLine( line, color );
+            continue;
+          }
+        }
+        if (justPrinted) {
+          continue;
+        }
+      }
+
+      
       if ( markIdentifier( argv[argc - 1], line, color )) {
+        counter = 0;
+        justPrinted = true;
         if (numbers)  {
           for ( int i = 0; i < lineCounter; i++ )  {
-            printf( "%*d: ", (lineNumberCounter - lineCounter + i), numLines);
+            printf( "%*d: ", digits, nums[i]);
             printf( "%s", historyArr[i] );
           }
-          printf( "%*d: ", lineNumberCounter, numLines);
+          printf( "%*d: ", digits, lineNumberCounter);
           printLine( line, color );
           for ( int i = 0; i < context; i++ )  {
+            nums[i] = 0;
             for ( int j = 0; j < LINE_LIMIT + 1; j++ )  {
               historyArr[i][j] = '\0';
+              lineCounter = 0;
             }
           }
         }
@@ -250,67 +292,94 @@ int main( int argc, char *argv[] )
             }
           }
         }
-        lastLineProcessed = true;
   
       }
-  
-      if ( lineCounter >= context )  {
+
+      else if ( lineCounter >= context )  {
         for ( int i = 1; i < context; i++ )  {
           strcpy( historyArr[i - 1], historyArr[i] );
+          nums[i - 1] = nums[i] ;
         }
         strcpy(historyArr[context - 1], line);
+        nums[context - 1] = lineNumberCounter;
       }
       else  {
         strcpy(historyArr[lineCounter], line);
+        nums[lineCounter] = lineNumberCounter;
         lineCounter++;
       }
+      
     }
-    if (!lastLineProcessed && markIdentifier( argv[argc - 1], line, color )) {
-      lineCounter++;
-        if (numbers)  {
-          for ( int i = 0; i < lineCounter; i++ )  {
-            printf( "%*d: ", (lineNumberCounter - lineCounter + i), numLines);
-            printf( "%s", historyArr[i] );
-          }
-          printf( "%*d: ", lineNumberCounter, numLines);
-          printLine( line, color );
+
+
+
+    if ( markIdentifier( argv[argc - 1], line, color )) {
+      lineNumberCounter++;
+      if (numbers)  {
+        for ( int i = 0; i < lineCounter; i++ )  {
+          printf( "%*d: ", digits, nums[i]);
+          printf( "%s", historyArr[i] );
         }
-        else  {
-          for ( int i = 0; i < lineCounter; i++ )  {
-            printf( "%s", historyArr[i] );
-          }
-          printLine( line, color );
+        printf( "%*d: ", digits, lineNumberCounter);
+        printLine( line, color );
+        for ( int i = 0; i < context; i++ )  {
+          nums[i] = 0;
+            for ( int j = 0; j < LINE_LIMIT + 1; j++ )  {
+              historyArr[i][j] = '\0';
+              lineCounter = 0;
+            }
         }
+      }
+      else  {
+        for ( int i = 0; i < lineCounter; i++ )  {
+          printf( "%s", historyArr[i] );
+        }
+        printLine( line, color );
+        for ( int i = 0; i < context; i++ )  {
+          for ( int j = 0; j < LINE_LIMIT + 1; j++ )  {
+            historyArr[i][j] = '\0';
+            lineCounter = 0;
+          }
+        }
+      }
     }
+    else if (justPrinted)  {
+      if (numbers) {
+        printf( "%*d: ", digits, lineNumberCounter + 1);
+        printLine( line, color );
+      }
+      else {
+        printLine( line, color );
+      }
+    }
+
+
   }
-  else  {
-    char line[LINE_LIMIT + 1];
-    int color[LINE_LIMIT];
-    int lineNumberCounter = 0;
-    bool lastLineProcessed = false;
+
+  else {
     while ( readLine( fp, line ) )  {
       lineNumberCounter++;
       if ( markIdentifier( argv[argc - 1], line, color )) {
         if (numbers)  {
-          printf( "%*d: ", lineNumberCounter, numLines);
+          printf( "%*d: ", digits, lineNumberCounter);
           printLine( line, color );
         }
         else  {
           printLine( line, color );
         }
-        lastLineProcessed = true;
       }
     }
-    if (!lastLineProcessed && markIdentifier( argv[argc - 1], line, color )) {
+    if (markIdentifier( argv[argc - 1], line, color )) {
       lineNumberCounter++;
-        if (numbers)  {
-            printf( "%*d: ", lineNumberCounter, numLines);
-            printLine( line, color );
-          }
-          else  {
-            printLine( line, color );
-          }
+      if (numbers)  {
+        printf( "%*d: ", digits, lineNumberCounter);
+        printLine( line, color );
+      }
+      else  {
+        printLine( line, color );
+      }
     }
+    return EXIT_SUCCESS;
   }
-  return EXIT_SUCCESS;
-}
+    
+  }

@@ -51,6 +51,7 @@ bool readLine( FILE *fp, char line[ LINE_LIMIT + 1 ])
     line[indexCounter] = ch;
     indexCounter++;
   }
+  line[indexCounter] = '\0';
   return false;
 }
 

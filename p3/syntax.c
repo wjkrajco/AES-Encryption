@@ -51,55 +51,141 @@ bool validIdentifier( char ident[] )
   return true;
 }
 
-bool markIdentifier(char word[], char line[], int color[]) {
-    int innerCounter = 0;
-    int wordLength = strlen(word);
-    int lineLength = strlen(line);
-    bool foundWord = false;
-    bool result = false;
+// bool markIdentifier( char word[], char line[], int color[] )  
+// {
+//   int innerCounter = 0;
+//   int wordLength = strlen( word );
+//   int lineLength = strlen( line );
+//   bool foundWord = false;
+//   bool result = false;
 
-    for (int i = 0; i < lineLength; i++) {
-        if (foundWord && (innerCounter > 0)) {
-            color[i] = IDENT_COLOR;
-            innerCounter--;
-            result = true;
-        } else {
-            if ((wordLength == 1) && (word[0] == line[i])) {
-                color[i] = IDENT_COLOR;
-                result = true;
-            } else {
-                if ((word[0] == line[i]) && ((lineLength - i - 1) >= wordLength)) {
-                    bool matched = true;
-                    for (int j = 1; j < wordLength; j++) {
-                        if (!((line[i + j] >= 'a' && line[i + j] <= 'z') ||
-                              (line[i + j] >= 'A' && line[i + j] <= 'Z') ||
-                              (line[i + j] >= '0' && line[i + j] <= '9') ||
-                              (line[i + j] == '_'))) {
-                            matched = false;
-                            break;
-                        }
-                        if (word[j] != line[i + j]) {
-                            matched = false;
-                            break;
-                        }
-                        innerCounter = j;
-                        if (innerCounter == wordLength - 1) {
-                            foundWord = true;
-                        }
-                    }
-                    if (foundWord && matched) {
-                        for (int j = i; j < i + wordLength; j++) {
-                            color[j] = IDENT_COLOR;
-                        }
-                        result = true;
-                    } else {
-                        color[i] = DEFAULT_COLOR;
-                    }
-                } else {
-                    color[i] = DEFAULT_COLOR;
-                }
-            }
-        }
-    }
-    return result;
+//   for ( int i = 0; i < lineLength; i++ )  {
+
+//     if ( foundWord && ( innerCounter > 0 ) )  {
+//       color[i] = IDENT_COLOR;
+//       innerCounter--;
+//       result = true;
+//     }
+//     else  {
+
+//       if ( ( wordLength == 1 ) && (word[0] == line[i]) )  {
+//         color[i] = IDENT_COLOR;
+//         result = true;
+//       }
+//       else {
+//         if (( word[0] == line[i] ) && (( lineLength - i - 1 ) >= wordLength ) )  {
+
+//           for ( int j = 1; j < wordLength; j++)  {
+  
+//             if ( word[j] != line[i + j] )  {
+
+//               foundWord = false;
+//               break;
+//             }
+//             innerCounter = j;
+//             if (innerCounter == wordLength - 1) {
+//               foundWord = true;
+//             }
+//           }
+//           if (foundWord) {
+//             for (int j = i; j < i + wordLength; j++) {
+//               color[j] = IDENT_COLOR;
+//             }
+//             result = true;
+//           }
+//           else {
+//             color[i] = DEFAULT_COLOR;
+//           }
+//         }
+//         else  {
+//           color[i] = DEFAULT_COLOR;
+//         }
+//       }
+//     }
+    
+//   }
+
+//   return result;
+// }
+
+
+static bool isAllowedEndCharacter(char ch)  
+{
+  if (!((ch >= SMALLEST_LETTER_LOWER && ch <= LARGEST_LETTER_LOWER) ||
+  (ch >= SMALLEST_LETTER_UPPER && ch <= LARGEST_LETTER_UPPER) || (ch == UNDERSCORE) ||
+    (ch >= DIGIT_MINIMUM && ch <= DIGIT_MAXIMUM))) {
+      return true;
+  }
+  return false;
 }
+
+static bool isAllowedStartCharacter(char ch)  
+{
+    if (!((ch >= SMALLEST_LETTER_LOWER && ch <= LARGEST_LETTER_LOWER) ||
+   (ch >= SMALLEST_LETTER_UPPER && ch <= LARGEST_LETTER_UPPER ) || (ch == UNDERSCORE ))) {
+    return true;
+  }
+  return false;
+}
+
+bool markIdentifier(char word[], char line[], int color[]) 
+{
+  int lineLength = strlen( line );
+  int wordLength = strlen( word );
+  int characterCounter = 0;
+  char characterAfter;
+  char characterBefore;
+  bool wordFound = true;
+  bool result = false;
+  for (int i = 0; i < LINE_LIMIT; i++)  {
+    color[i] = 0;
+  }
+
+  while (characterCounter < lineLength)  {
+    if ((characterCounter == 0) && (lineLength - characterCounter) > wordLength)  {
+      wordFound = true;
+      characterCounter++;
+      for (int i = 0; i < wordLength; i++)  {
+        if (word[i] != line[i])  {
+          wordFound = false;
+        }
+      }
+      if (wordFound)  {
+        characterAfter = line[wordLength];
+        if (isAllowedEndCharacter(characterAfter))  {
+          for (int i = 0; i < wordLength; i++)  {
+            color[i] = IDENT_COLOR;
+          }
+          result = true;
+        }
+      }
+  
+    }
+    else if (characterCounter > 0 && (lineLength - characterCounter) > wordLength)  {
+      wordFound = true;
+      characterCounter++;
+      for (int i = (characterCounter - 1); i < (characterCounter + wordLength - 1); i++)  {
+        if (word[i - characterCounter + 1] != line[i])  {
+          wordFound = false;
+        }
+      }
+      if (wordFound)  {
+        characterAfter = line[characterCounter + wordLength - 1];
+        characterBefore = line[characterCounter - 2]; 
+        if (isAllowedEndCharacter(characterAfter) && isAllowedStartCharacter(characterBefore))  {
+          for (int i = (characterCounter - 1); i < (characterCounter + wordLength - 1); i++)  {
+            color[i] = IDENT_COLOR;
+          }
+          result = true;
+        }
+  
+      }
+  
+    }
+    else  {
+      return result;
+    }
+  }
+  return result;
+}
+
