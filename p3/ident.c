@@ -35,9 +35,18 @@ static int context = 0;
 /** True if we're printing line numbers. */
 static bool numbers = false;
   
-/** True if we're showing operators (for the extra credit). */
-// static bool operators = false;
+// /** True if we're showing operators (for the extra credit). */
+//  static bool operators = false;
 
+/** 
+    Takes in a string from the argv[] array and check if all of the characters of the string at a given
+    index are all integers and dif it can be converted to a number.
+
+    @param index This is the index of the argument that is going to be check if it is a number
+    @param argv This is an array of pointers to the strings that were passed in to the program.
+    @return true if the string can be a number, and false if the string contains things other than digits and
+      cannot be created as a number.
+*/
 static bool isNum(int index, char *argv[])  {
   bool isNum = true;
   for (int i = 0; i < strlen(argv[index]); i++)  {
@@ -83,6 +92,23 @@ static void processArgs( int argc, char *argv[] )
 }
 
 /** 
+    This is the countDigits function which takes in an int and returns the length of the int
+    int terms of digits, so if 1000 is given in 4 is returned since ther are four digits.
+
+    @param numLines the int that is taken in to count how many digits in the in.
+    @return the number of digits in the int given
+*/
+static int countDigits(int numLines)  
+{
+  int digits = 0;
+  while (numLines != 0)  {
+    numLines = numLines / BASE_10;
+    ++digits;
+  }
+  return digits;
+}
+
+/** 
     This is the main function of the program. This function calls to programs syntax and io to
     read through a file and retunt lines that have matches to a given identifier by a user and prints
     out those lines. It will print out the number of lines with matches as well as context around
@@ -92,112 +118,6 @@ static void processArgs( int argc, char *argv[] )
     @param argv This is an array of pointers to the strings that were passed in to the program.
     @return EXIT_SUCESS if the program completes
 */
-// int main( int argc, char *argv[] )  
-// {
-//   processArgs( argc, argv );
-
-//   if ( ( argc - 1 ) < REQUIRED_ARGS )  {
-//     fprintf( stderr, "usage: ident [-c <context>] [-n] <file> <identifier>\n" );
-//     exit(1);
-//   }
-//   FILE *fp = fopen( argv[argc - REQUIRED_ARGS], "r" );
-//   if ( !fp )  {
-//     fprintf( stderr, "Can't open file: %s\n", argv[argc - REQUIRED_ARGS] );
-//     exit(1);
-//   }
-
-//   if ( !validIdentifier( argv[argc - 1] ) )  {
-//     fprintf( stderr, "Invalid identifier: %s\n", argv[argc - 1] );
-//     exit( 1 );
-//   }
-
-//   int numLines = countLines( fp );
-
-//   if ( context > 0 )  {
-//     char historyArr[context][LINE_LIMIT + 1];
-//     char line[LINE_LIMIT + 1];
-//     int color[LINE_LIMIT];
-//     int lineCounter = 0;
-//     int lineNumberCounter = 0;
-//     while ( readLine( fp, line ) )  {
-//       lineNumberCounter++;
-//       if ( markIdentifier( argv[argc - 1], line, color )) {
-//         if (numbers)  {
-//           for ( int i = 0; i < lineCounter; i++ )  {
-//             printf( "%*d: ", (lineNumberCounter - lineCounter + i), numLines);
-//             printf( "%s", historyArr[i] );
-//           }
-//           printf( "%*d: ", lineNumberCounter, numLines);
-//           printLine( line, color );
-//           for ( int i = 0; i < context; i++ )  {
-//             for ( int j = 0; j < LINE_LIMIT + 1; j++ )  {
-//               historyArr[i][j] = '\0';
-//             }
-//           }
-//         }
-//         else  {
-//           for ( int i = 0; i < lineCounter; i++ )  {
-//             printf( "%s", historyArr[i] );
-//           }
-//           printLine( line, color );
-//           for ( int i = 0; i < context; i++ )  {
-//             for ( int j = 0; j < LINE_LIMIT + 1; j++ )  {
-//               historyArr[i][j] = '\0';
-//               lineCounter = 0;
-//             }
-//           }
-//         }
-
-  
-//       }
-  
-//       if ( lineCounter >= context )  {
-//         for ( int i = 1; i < context; i++ )  {
-//           strcpy( historyArr[i - 1], historyArr[i] );
-//         }
-//         strcpy(historyArr[context - 1], line);
-//       }
-//       else  {
-//         strcpy(historyArr[lineCounter], line);
-//         lineCounter++;
-//       }
-      
-//     }
-//   }
-//   else  {
-//     char line[LINE_LIMIT + 1];
-//     int color[LINE_LIMIT];
-//     int lineNumberCounter = 0;
-//     while ( readLine( fp, line ) )  {
-//       lineNumberCounter++;
-//       if ( markIdentifier( argv[argc - 1], line, color )) {
-//         if (numbers)  {
-//           printf( "%*d: ", lineNumberCounter, numLines);
-//           printLine( line, color );
-//         }
-//         else  {
-//           printLine( line, color );
-//         }
-//       }
-//     }
-//   }
-//   fclose(fp);
-
-
-
-//   return EXIT_SUCCESS;
-// }
-
-static int countDigits(int numLines)  
-{
-  int digits = 0;
-  while (numLines != 0)  {
-    numLines = numLines / 10;
-    ++digits;
-  }
-  return digits;
-}
-
 int main( int argc, char *argv[] )  
 {
   processArgs( argc, argv );
@@ -381,5 +301,4 @@ int main( int argc, char *argv[] )
     }
     return EXIT_SUCCESS;
   }
-    
-  }
+}

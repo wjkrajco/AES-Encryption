@@ -32,7 +32,10 @@
 /** The ASCII value for the largest digit */
 #define DIGIT_MAXIMUM 57
 
-
+/** This allows us to add to the current index of the word to get the 
+ *  letter after the word to ensure they are matching and have valid before and after characters.
+*/
+#define GET_LETTER_AFTER_WORD 2
 
 bool validIdentifier( char ident[] )  
 {
@@ -51,64 +54,13 @@ bool validIdentifier( char ident[] )
   return true;
 }
 
-// bool markIdentifier( char word[], char line[], int color[] )  
-// {
-//   int innerCounter = 0;
-//   int wordLength = strlen( word );
-//   int lineLength = strlen( line );
-//   bool foundWord = false;
-//   bool result = false;
+/** 
+    This function takes in a character and checks if the character would be able to be at the
+    end of an identifier and still allow the identifier to be to be valid.
 
-//   for ( int i = 0; i < lineLength; i++ )  {
-
-//     if ( foundWord && ( innerCounter > 0 ) )  {
-//       color[i] = IDENT_COLOR;
-//       innerCounter--;
-//       result = true;
-//     }
-//     else  {
-
-//       if ( ( wordLength == 1 ) && (word[0] == line[i]) )  {
-//         color[i] = IDENT_COLOR;
-//         result = true;
-//       }
-//       else {
-//         if (( word[0] == line[i] ) && (( lineLength - i - 1 ) >= wordLength ) )  {
-
-//           for ( int j = 1; j < wordLength; j++)  {
-  
-//             if ( word[j] != line[i + j] )  {
-
-//               foundWord = false;
-//               break;
-//             }
-//             innerCounter = j;
-//             if (innerCounter == wordLength - 1) {
-//               foundWord = true;
-//             }
-//           }
-//           if (foundWord) {
-//             for (int j = i; j < i + wordLength; j++) {
-//               color[j] = IDENT_COLOR;
-//             }
-//             result = true;
-//           }
-//           else {
-//             color[i] = DEFAULT_COLOR;
-//           }
-//         }
-//         else  {
-//           color[i] = DEFAULT_COLOR;
-//         }
-//       }
-//     }
-    
-//   }
-
-//   return result;
-// }
-
-
+    @param ch the character to be checked if it would change the identifier.
+    @return true if the character is would change the identifier if it was at the end and false if not.
+*/
 static bool isAllowedEndCharacter(char ch)  
 {
   if (!((ch >= SMALLEST_LETTER_LOWER && ch <= LARGEST_LETTER_LOWER) ||
@@ -119,6 +71,13 @@ static bool isAllowedEndCharacter(char ch)
   return false;
 }
 
+/** 
+    This function takes in a character and checks if the character would be able to be at the
+    start of an identifier and still allow the identifier to be to be valid.
+
+    @param ch the character to be checked if it would change the identifier.
+    @return true if the character is would change the identifier if it was at the start and false if not.
+*/
 static bool isAllowedStartCharacter(char ch)  
 {
     if (!((ch >= SMALLEST_LETTER_LOWER && ch <= LARGEST_LETTER_LOWER) ||
@@ -171,7 +130,7 @@ bool markIdentifier(char word[], char line[], int color[])
       }
       if (wordFound)  {
         characterAfter = line[characterCounter + wordLength - 1];
-        characterBefore = line[characterCounter - 2]; 
+        characterBefore = line[characterCounter - GET_LETTER_AFTER_WORD]; 
         if (isAllowedEndCharacter(characterAfter) && isAllowedStartCharacter(characterBefore))  {
           for (int i = (characterCounter - 1); i < (characterCounter + wordLength - 1); i++)  {
             color[i] = IDENT_COLOR;
@@ -188,4 +147,3 @@ bool markIdentifier(char word[], char line[], int color[])
   }
   return result;
 }
-
