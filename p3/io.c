@@ -24,21 +24,23 @@ int countLines( FILE *fp )
       lineCounter++;
       charCounter = 0;
     }
-    if ( charCounter >= LINE_LIMIT )  {
+    if ( charCounter > LINE_LIMIT )  {
       fprintf(stderr, "Input line too long\n");
       exit(1);
     }
   }
+  fseek(fp, 0, SEEK_SET);
   return lineCounter;
 }
 
-bool readLine( FILE *fp, char line[ LINE_LIMIT + 1 ] )
+bool readLine( FILE *fp, char line[ LINE_LIMIT + 1 ])
 {
   char ch;
   int indexCounter = 0;
   while ( ( ch = fgetc( fp ) ) != EOF )  {
     if ( ch == '\n')  {
-      line[indexCounter] = '\0';
+      line[indexCounter] = '\n';
+      line[indexCounter + 1] = '\0';
       if ( ( ch = fgetc( fp ) ) != EOF )  {
         ungetc(ch, fp);
         return true;
@@ -52,31 +54,33 @@ bool readLine( FILE *fp, char line[ LINE_LIMIT + 1 ] )
   return false;
 }
 
-void printLine( char line[ LINE_LIMIT + 1 ], int color[ LINE_LIMIT ] )  
-{
-  for (int i = 0; i < LINE_LIMIT; ++i)  {
-    if (color[i] == IDENT_COLOR)  {
-      putchar(FIRST_HEXADECIMAL_COLOR);
-      putchar(SECOND_HEXADECIMAL_COLOR);
-      putchar(THIRD_HEXADECIMAL_COLOR);
-      putchar(FOURTH_HEXADECIMAL_RED);
-      putchar(FINAL_HEXADECIMAL_COLOR);
-      printf("%c", line[i]);
+void printLine(char line[LINE_LIMIT + 1], int color[LINE_LIMIT]) {
+  bool inWord = false;
+  for (int i = 0; i < strlen(line); ++i) {
+    if (color[i] == IDENT_COLOR) {
+      if (!inWord) {
+        putchar(FIRST_HEXADECIMAL_COLOR);
+        putchar(SECOND_HEXADECIMAL_COLOR);
+        putchar(THIRD_HEXADECIMAL_COLOR);
+        putchar(FOURTH_HEXADECIMAL_RED);
+        putchar(FINAL_HEXADECIMAL_COLOR);
+        inWord = true;
+      }
+    } else {
+      if (inWord) {
+        putchar(FIRST_HEXADECIMAL_COLOR);
+        putchar(SECOND_HEXADECIMAL_COLOR);
+        putchar(THIRD_HEXADECIMAL_NORMAL);
+        putchar(FINAL_HEXADECIMAL_COLOR);
+        inWord = false;
+      }
     }
-    if (color[i] == DEFAULT_COLOR)  {
-      putchar(FIRST_HEXADECIMAL_COLOR);
-      putchar(SECOND_HEXADECIMAL_COLOR);
-      putchar(THIRD_HEXADECIMAL_NORMAL);
-      putchar(FINAL_HEXADECIMAL_COLOR);
-      printf("%c", line[i]);
-    }
-    if (color[i] == OP_COLOR)  {
-      putchar(FIRST_HEXADECIMAL_COLOR);
-      putchar(SECOND_HEXADECIMAL_COLOR);
-      putchar(THIRD_HEXADECIMAL_COLOR);
-      putchar(FOURTH_HEXADECIMAL_BLUE);
-      putchar(FINAL_HEXADECIMAL_COLOR);
-      printf("%c", line[i]);
-    }
+    printf("%c", line[i]);
+  }
+  if (inWord) {
+    putchar(FIRST_HEXADECIMAL_COLOR);
+    putchar(SECOND_HEXADECIMAL_COLOR);
+    putchar(THIRD_HEXADECIMAL_NORMAL);
+    putchar(FINAL_HEXADECIMAL_COLOR);
   }
 }

@@ -2,7 +2,7 @@ ident: ident.o syntax.o io.o
 	gcc ident.o syntax.o io.o -o ident
 
 ident.o: ident.c syntax.h io.h
-	gcc -g -Wall -std=c99 -c -o ident.o ident.c
+	gcc -g -Wall -std=c99   -c -o ident.o ident.c
 
 syntax.o: syntax.c syntax.h io.h
 	gcc -c -Wall -std=c99 -g syntax.c -o syntax.o

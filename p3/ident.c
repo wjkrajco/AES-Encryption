@@ -20,6 +20,12 @@
 /** Number of arguments required on the command line. */
 #define REQUIRED_ARGS 2
 
+/** The ASCII value for the smallest digit */
+#define DIGIT_MINIMUM 48
+
+/** The ASCII value for the largest digit */
+#define DIGIT_MAXIMUM 57
+
 /** Lines of context to show around an identifier. */
 static int context = 0;
 
@@ -42,10 +48,10 @@ static void processArgs( int argc, char *argv[] )
   bool isNum = false;
   bool isCurrentNum = false;
 
-  if ( ( argc - 1 ) > 2 ) {
+  if ( ( argc - 1 ) > REQUIRED_ARGS ) {
     for ( int i = 1; i < argc - REQUIRED_ARGS; i++ )  {
       for ( int j = 0; j < strlen( argv[i] ); j++ )  {
-        if ( ( int )argv[i][j] >= 48 && ( int )argv[i][j] <= 57 )  {
+        if ( ( int )argv[i][j] >= DIGIT_MINIMUM && ( int )argv[i][j] <= DIGIT_MAXIMUM )  {
           if ( !contextBool )  {
             fprintf( stderr, "usage: ident [-c <context>] [-n] <file> <identifier>\n" );
             exit(1);
@@ -91,17 +97,115 @@ static void processArgs( int argc, char *argv[] )
     @param argv This is an array of pointers to the strings that were passed in to the program.
     @return EXIT_SUCESS if the program completes
 */
+// int main( int argc, char *argv[] )  
+// {
+//   processArgs( argc, argv );
+
+//   if ( ( argc - 1 ) < REQUIRED_ARGS )  {
+//     fprintf( stderr, "usage: ident [-c <context>] [-n] <file> <identifier>\n" );
+//     exit(1);
+//   }
+//   FILE *fp = fopen( argv[argc - REQUIRED_ARGS], "r" );
+//   if ( !fp )  {
+//     fprintf( stderr, "Can't open file: %s\n", argv[argc - REQUIRED_ARGS] );
+//     exit(1);
+//   }
+
+//   if ( !validIdentifier( argv[argc - 1] ) )  {
+//     fprintf( stderr, "Invalid identifier: %s\n", argv[argc - 1] );
+//     exit( 1 );
+//   }
+
+//   int numLines = countLines( fp );
+
+//   if ( context > 0 )  {
+//     char historyArr[context][LINE_LIMIT + 1];
+//     char line[LINE_LIMIT + 1];
+//     int color[LINE_LIMIT];
+//     int lineCounter = 0;
+//     int lineNumberCounter = 0;
+//     while ( readLine( fp, line ) )  {
+//       lineNumberCounter++;
+//       if ( markIdentifier( argv[argc - 1], line, color )) {
+//         if (numbers)  {
+//           for ( int i = 0; i < lineCounter; i++ )  {
+//             printf( "%*d: ", (lineNumberCounter - lineCounter + i), numLines);
+//             printf( "%s", historyArr[i] );
+//           }
+//           printf( "%*d: ", lineNumberCounter, numLines);
+//           printLine( line, color );
+//           for ( int i = 0; i < context; i++ )  {
+//             for ( int j = 0; j < LINE_LIMIT + 1; j++ )  {
+//               historyArr[i][j] = '\0';
+//             }
+//           }
+//         }
+//         else  {
+//           for ( int i = 0; i < lineCounter; i++ )  {
+//             printf( "%s", historyArr[i] );
+//           }
+//           printLine( line, color );
+//           for ( int i = 0; i < context; i++ )  {
+//             for ( int j = 0; j < LINE_LIMIT + 1; j++ )  {
+//               historyArr[i][j] = '\0';
+//               lineCounter = 0;
+//             }
+//           }
+//         }
+
+  
+//       }
+  
+//       if ( lineCounter >= context )  {
+//         for ( int i = 1; i < context; i++ )  {
+//           strcpy( historyArr[i - 1], historyArr[i] );
+//         }
+//         strcpy(historyArr[context - 1], line);
+//       }
+//       else  {
+//         strcpy(historyArr[lineCounter], line);
+//         lineCounter++;
+//       }
+      
+//     }
+//   }
+//   else  {
+//     char line[LINE_LIMIT + 1];
+//     int color[LINE_LIMIT];
+//     int lineNumberCounter = 0;
+//     while ( readLine( fp, line ) )  {
+//       lineNumberCounter++;
+//       if ( markIdentifier( argv[argc - 1], line, color )) {
+//         if (numbers)  {
+//           printf( "%*d: ", lineNumberCounter, numLines);
+//           printLine( line, color );
+//         }
+//         else  {
+//           printLine( line, color );
+//         }
+//       }
+//     }
+//   }
+//   fclose(fp);
+
+
+
+//   return EXIT_SUCCESS;
+// }
+
+
+
 int main( int argc, char *argv[] )  
 {
   processArgs( argc, argv );
 
-  if ( ( argc - 1 ) < 2 )  {
+  if ( ( argc - 1 ) < REQUIRED_ARGS )  {
     fprintf( stderr, "usage: ident [-c <context>] [-n] <file> <identifier>\n" );
     exit(1);
   }
-  FILE *fp = fopen( argv[argc - 2], "r" );
+  FILE *fp = fopen( argv[argc - REQUIRED_ARGS], "r" );
   if ( !fp )  {
-    fprintf( stderr, "Can't open file: %s\n", argv[argc - 2] );
+    fprintf( stderr, "Can't open file: %s\n", argv[argc - REQUIRED_ARGS] );
     exit(1);
   }
 
@@ -111,13 +215,13 @@ int main( int argc, char *argv[] )
   }
 
   int numLines = countLines( fp );
-
   if ( context > 0 )  {
     char historyArr[context][LINE_LIMIT + 1];
     char line[LINE_LIMIT + 1];
     int color[LINE_LIMIT];
     int lineCounter = 0;
     int lineNumberCounter = 0;
+    bool lastLineProcessed = false;
     while ( readLine( fp, line ) )  {
       lineNumberCounter++;
       if ( markIdentifier( argv[argc - 1], line, color )) {
@@ -146,7 +250,7 @@ int main( int argc, char *argv[] )
             }
           }
         }
-
+        lastLineProcessed = true;
   
       }
   
@@ -161,11 +265,29 @@ int main( int argc, char *argv[] )
         lineCounter++;
       }
     }
+    if (!lastLineProcessed && markIdentifier( argv[argc - 1], line, color )) {
+      lineCounter++;
+        if (numbers)  {
+          for ( int i = 0; i < lineCounter; i++ )  {
+            printf( "%*d: ", (lineNumberCounter - lineCounter + i), numLines);
+            printf( "%s", historyArr[i] );
+          }
+          printf( "%*d: ", lineNumberCounter, numLines);
+          printLine( line, color );
+        }
+        else  {
+          for ( int i = 0; i < lineCounter; i++ )  {
+            printf( "%s", historyArr[i] );
+          }
+          printLine( line, color );
+        }
+    }
   }
   else  {
     char line[LINE_LIMIT + 1];
     int color[LINE_LIMIT];
     int lineNumberCounter = 0;
+    bool lastLineProcessed = false;
     while ( readLine( fp, line ) )  {
       lineNumberCounter++;
       if ( markIdentifier( argv[argc - 1], line, color )) {
@@ -176,11 +298,19 @@ int main( int argc, char *argv[] )
         else  {
           printLine( line, color );
         }
+        lastLineProcessed = true;
       }
     }
+    if (!lastLineProcessed && markIdentifier( argv[argc - 1], line, color )) {
+      lineNumberCounter++;
+        if (numbers)  {
+            printf( "%*d: ", lineNumberCounter, numLines);
+            printLine( line, color );
+          }
+          else  {
+            printLine( line, color );
+          }
+    }
   }
-
-
-
   return EXIT_SUCCESS;
 }
