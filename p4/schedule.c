@@ -409,6 +409,12 @@ static bool testTimeSlot(Course const *course, char const *str1, char const *str
     }
 }
 
+/** 
+    Prints out the courses that are in the schedule in a calendar format.
+
+    @param schedule The array of courses in the schedule.
+    @param courses The number of courses in schedule.
+*/
 static void printCalendar(Course* schedule[], int courses)
 {
     char str1[DEPT_AND_NUMBER_TOTAL] = "        ";
