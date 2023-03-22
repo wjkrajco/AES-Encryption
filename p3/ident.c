@@ -35,8 +35,8 @@ static int context = 0;
 /** True if we're printing line numbers. */
 static bool numbers = false;
   
-// /** True if we're showing operators (for the extra credit). */
-//  static bool operators = false;
+/** True if we're showing operators (for the extra credit). */
+static bool operators = false;
 
 /** 
     Takes in a string from the argv[] array and check if all of the characters of the string at a given
@@ -75,6 +75,9 @@ static void processArgs( int argc, char *argv[] )
   for (int i = 1; i < argc - REQUIRED_ARGS; i++)  {
     if (strcmp("-n", argv[i]) == 0)  {
       numbers = true;
+    }
+    else if (strcmp("-o", argv[i]) == 0)  {
+      operators = true;
     }
     else if (strcmp("-c", argv[i]) == 0)  {
       contextBool = true;
@@ -140,20 +143,18 @@ int main( int argc, char *argv[] )
   int numLines = countLines( fp );
   int digits = countDigits(numLines);
 
-  char line[LINE_LIMIT + 1];
-  int color[LINE_LIMIT];
-  int lineNumberCounter = 0;
-
-  if ( context > 0 )  {
     char historyArr[context][LINE_LIMIT + 1];
     char line[LINE_LIMIT + 1];
     int nums[context];
-    int color[LINE_LIMIT];
+    int color[LINE_LIMIT] = {0};
     int lineCounter = 0;
     int lineNumberCounter = 0;
     bool justPrinted = false;
     int counter = 0;
 
+
+
+  if ( context > 0 )  {
     while ( readLine( fp, line ) )  {
       lineNumberCounter++;
 

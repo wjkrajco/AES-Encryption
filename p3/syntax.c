@@ -87,6 +87,62 @@ static bool isAllowedStartCharacter(char ch)
   return false;
 }
 
+static bool isOperator(char ch)  
+{
+
+  if (ch == '+' || ch == '-'|| ch == '*' || ch == '/' || ch == '%' || ch == '=' ||
+      ch == '!' || ch == '>' || ch == '<' || ch == '&' || ch == '|' || ch == ':' || ch == '?' ||
+        ch == '^' || ch == '~' || ch == '.' || ch == ',') {
+          return true;
+        }
+  return false;
+
+}
+
+//NEEDS COMMENTS
+static bool markOperators(char line[], int color[])
+{
+  int characterCounter = 0;
+  bool wasComment = false;
+  bool result = false;
+  for (int i = 0; i < strlen(line); ++i)  {
+    if (isOperator(line[i])) {
+      if (wasComment)  {
+        wasComment = false;
+        continue;
+      }
+
+      if (line[i] == '/') {
+        if (line[i + 1] == '/' || line[i + 1] == '*') {
+          wasComment = true;
+          continue;
+        }
+      }
+
+      if (line[i] == '*') {
+        if (line[i + 1] == '/') {
+          wasComment = true;
+          continue;
+        }
+      }
+
+      if (characterCounter == 0) {
+          if (isAllowedEndCharacter(line[i + 1]))  {
+            color[i] = IDENT_COLOR;
+            result = true;
+          }
+        }
+      else if (isAllowedEndCharacter(line[i + 1]) && isAllowedStartCharacter(line[i - 1])){
+          color[i] = IDENT_COLOR;
+          result = true;
+        }
+
+    }
+  }
+  return result;
+
+}
+
 bool markIdentifier(char word[], char line[], int color[]) 
 {
   int lineLength = strlen( line );
@@ -96,6 +152,10 @@ bool markIdentifier(char word[], char line[], int color[])
   char characterBefore;
   bool wordFound = true;
   bool result = false;
+  bool operators = false;
+  if (color[0] == 1) {
+    operators = true;
+  }
   for (int i = 0; i < LINE_LIMIT; i++)  {
     color[i] = 0;
   }
@@ -142,8 +202,25 @@ bool markIdentifier(char word[], char line[], int color[])
   
     }
     else  {
+      
+      if (!result && operators)  {
+        result = markOperators(line, color);
+        return result;
+      }
+      else if (operators)  {
+        markOperators(line, color);
+        return result;
+      }
       return result;
     }
+  }
+  if (!result && operators)  {
+    result = markOperators(line, color);
+    return result;
+  }
+  else if (operators)  {
+    markOperators(line, color);
+    return result;
   }
   return result;
 }
