@@ -309,7 +309,8 @@ static bool testListDepartment(Course const *course, char const *str1, char cons
     @param str2 String 2 that will be used to see if a course can be added.
     @return Return true if a course should be added to the schedule.
 */
-static bool canGoInSchedule(Course* schedule[], Catalog *catalog, int courses, char *str1, char *str2)  {
+static bool canGoInSchedule(Course* schedule[], Catalog *catalog, int courses, char *str1, char *str2)
+{
     int catalogIndex = -1;
     bool isInCatalog = false;
     if (courses >= SCHEDULE_SIZE)  {
@@ -346,7 +347,8 @@ static bool canGoInSchedule(Course* schedule[], Catalog *catalog, int courses, c
     @param str2 String 2 that will be used to see if a course can be dropped.
     @return Return the index of the course in schedule or -1 if nothing was found.
 */
-static int indexInSchedule(Course* schedule[], int courses, char *str1, char *str2)  {
+static int indexInSchedule(Course* schedule[], int courses, char *str1, char *str2)
+{
     for (int i = 0; i < courses; i++)  {
         if ((strcmp(schedule[i]->dept, str1) == 0) && (strcmp(schedule[i]->number, str2) == 0))  {
             return i;
@@ -361,7 +363,7 @@ static int indexInSchedule(Course* schedule[], int courses, char *str1, char *st
     @param schedule The array of courses in the schedule.
     @param courses The number of courses in schedule.
 */
-void listSchedule(Course* schedule[], int courses)  {
+static void listSchedule(Course* schedule[], int courses)  {
     printf("Course  Name                           Timeslot\n");
     for (int i = 0; i < courses; ++i)  {
         printf("%s %s %-30s %s %5s\n", schedule[i]->dept, schedule[i]->number, schedule[i]->name, schedule[i]->days, schedule[i]->time);
@@ -375,7 +377,7 @@ void listSchedule(Course* schedule[], int courses)  {
     @param schedule The array of courses in the schedule.
     @param courses The number of courses in schedule.
 */
-void sortSchedule( Course* schedule[], int courses, int (* compare) (void const *va, void const *vb ))  
+static void sortSchedule( Course* schedule[], int courses, int (* compare) (void const *va, void const *vb ))  
 {
     qsort(schedule, courses, sizeof(Course*), compare);
 
@@ -399,6 +401,109 @@ static bool testTimeSlot(Course const *course, char const *str1, char const *str
     else {
         return false;
     }
+}
+
+static void printCalendar(Course* schedule[], int courses)
+{
+    char str1[8] = "        ";
+    str1[7] = '\0';
+    char str2[8] = "        ";
+    str2[7] = '\0';
+    char str3[8] = "        ";
+    str3[7] = '\0';
+    char str4[8] = "        ";
+    str4[7] = '\0';
+    char str5[8] = "        ";
+    str5[7] = '\0';
+    char str6[8] = "        ";
+    str6[7] = '\0';
+    char str7[8] = "        ";
+    str7[7] = '\0';
+    char str8[8] = "        ";
+    str8[7] = '\0';
+    char str9[8] = "        ";
+    str9[7] = '\0';
+    char str10[8] = "        ";
+    str10[7] = '\0';
+    char str11[8] = "        ";
+    str11[7] = '\0';
+    char str12[8] = "        ";
+    str12[7] = '\0';
+
+
+    for (int i = 0; i < courses; i++)  {
+        if ((strcmp(schedule[i]->days, "MW") == 0) && (strcmp(schedule[i]->time, "8:30")) == 0)  {
+            strcpy(str1, schedule[i]->dept);
+            strcat(str1, " ");
+            strcat(str1, schedule[i]->number);
+        }
+        if ((strcmp(schedule[i]->days, "TH") == 0) && (strcmp(schedule[i]->time, "8:30")) == 0)  {
+            strcpy(str2, schedule[i]->dept);
+            strcat(str2, " ");
+            strcat(str2, schedule[i]->number);
+        }
+       if ((strcmp(schedule[i]->days, "MW") == 0) && (strcmp(schedule[i]->time, "10:00")) == 0)  {
+            strcpy(str3, schedule[i]->dept);
+            strcat(str3, " ");
+            strcat(str3, schedule[i]->number);
+        }
+       if ((strcmp(schedule[i]->days, "TH") == 0) && (strcmp(schedule[i]->time, "10:00")) == 0)  {
+            strcpy(str4, schedule[i]->dept);
+            strcat(str4, " ");
+            strcat(str4, schedule[i]->number);
+        }
+
+        if ((strcmp(schedule[i]->days, "MW") == 0) && (strcmp(schedule[i]->time, "11:30")) == 0)  {
+            strcpy(str5, schedule[i]->dept);
+            strcat(str5, " ");
+            strcat(str5, schedule[i]->number);
+        }
+       if ((strcmp(schedule[i]->days, "TH") == 0) && (strcmp(schedule[i]->time, "11:30")) == 0)  {
+            strcpy(str6, schedule[i]->dept);
+            strcat(str6, " ");
+            strcat(str6, schedule[i]->number);
+        }
+        if ((strcmp(schedule[i]->days, "MW") == 0) && (strcmp(schedule[i]->time, "1:00")) == 0)  {
+            strcpy(str7, schedule[i]->dept);
+            strcat(str7, " ");
+            strcat(str7, schedule[i]->number);
+        }
+       if ((strcmp(schedule[i]->days, "TH") == 0) && (strcmp(schedule[i]->time, "1:00")) == 0)  {
+            strcpy(str8, schedule[i]->dept);
+            strcat(str8, " ");
+            strcat(str8, schedule[i]->number);
+        }
+        if ((strcmp(schedule[i]->days, "MW") == 0) && (strcmp(schedule[i]->time, "2:30")) == 0)  {
+            strcpy(str9, schedule[i]->dept);
+            strcat(str9, " ");
+            strcat(str9, schedule[i]->number);
+        }
+       if ((strcmp(schedule[i]->days, "TH") == 0) && (strcmp(schedule[i]->time, "2:30")) == 0)  {
+            strcpy(str10, schedule[i]->dept);
+            strcat(str10, " ");
+            strcat(str10, schedule[i]->number);
+        }
+        if ((strcmp(schedule[i]->days, "MW") == 0) && (strcmp(schedule[i]->time, "4:00")) == 0)  {
+            strcpy(str11, schedule[i]->dept);
+            strcat(str11, " ");
+            strcat(str11, schedule[i]->number);
+        }
+       if ((strcmp(schedule[i]->days, "TH") == 0) && (strcmp(schedule[i]->time, "4:00")) == 0)  {
+            strcpy(str12, schedule[i]->dept);
+            strcat(str12, " ");
+            strcat(str12, schedule[i]->number);
+        }
+    }
+
+    printf("%s %s %s %s\n", "         Mon", "     Tue", "     Wed", "     Thu");
+    printf("%s %s %s %s %s %s %s %s\n", " 8:30 ", str1, "", str2, "", str1, "", str2);
+    printf("%s %s %s %s %s %s %s %s\n", "10:00 ", str3, "", str4, "", str3, "", str4);
+    printf("%s %s %s %s %s %s %s %s\n", "11:30 ", str5, "", str6, "", str5, "", str6);
+    printf("%s %s %s %s %s %s %s %s\n", " 1:00 ", str7, "", str8, "", str7, "", str8);
+    printf("%s %s %s %s %s %s %s %s\n", " 2:30 ", str9, "", str10, "", str9, "", str10);
+    printf("%s %s %s %s %s %s %s %s\n", " 4:00 ", str11, "", str12, "", str11, "", str12);
+    printf("%c", '\n');
+
 }
 
 
@@ -461,6 +566,12 @@ int main(int argc, char *argv[])
                 free(line);
                 freeCatalog(catalog);
                 exit(0);
+            }
+            else if (strcmp(first, "calendar") == 0)  {
+                free(line);
+                printCalendar(schedule, courseCounter);
+                continue;
+
             }
             else {
                 printf("%s\n\n", "Invalid command");
