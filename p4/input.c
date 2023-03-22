@@ -1,37 +1,13 @@
-
+/** 
+    @file input.c
+    @author William J Krjacovic (wjkrajco)
+    This is the header file for Input which has the job of reading a line from a file.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "input.h"
-
-
-// char *readLine (FILE *fp)
-// {
-//     int capacity = INITIAL_CAPACITY;
-//     int len = 0;
-//     char ch;
-//     char *str = (char *)malloc(capacity * sizeof(char));
-
-//     while((ch = fgetc(fp)) != '\n' && ch != EOF) {
-//         if (len >= capacity - 1) {
-//             capacity *= STRING_MULTIPLICATION;
-//             char *newStr = (char *)realloc(str, capacity * sizeof(char));
-//         }
-//         str[len++] = ch;
-//     }
-//     if (ch == EOF && len == 0)  {
-//         free(str);
-//         return NULL;
-//     }
-//     str[len] = '\0';
-//     ch = fgetc(fp);
-//     if (ch != EOF)  {
-//         ungetc(ch, fp);
-//     }
-//     return str;
-
-// }
 
 char *readLine(FILE *fp) {
     int capacity = INITIAL_CAPACITY;

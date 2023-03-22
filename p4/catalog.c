@@ -1,4 +1,11 @@
-
+/** 
+    @file catalog.c
+    @author William J Krjacovic (wjkrajco)
+    This catalog function has the job of making and free the catalog space. The file
+    also reads in the courses give a file name and creates new courses and stores them in the Catalog
+    through pointers. The file also has the job of printing out the courses, and sorting the catalog based
+    on input from the user.
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -227,4 +234,3 @@ void listCourses( Catalog *catalog, bool (*test)( Course const *course, char con
     }
     printf("%c", '\n');
 }
-

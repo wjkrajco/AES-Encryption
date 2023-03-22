@@ -20,6 +20,10 @@
 /**The max number of letters name for the course*/
 #define MAX_NAME 30
 
+/** 
+    This is the course struct it holds strings for department, course number,
+    days, time and the name of the course.
+*/
 struct CourseStruct {
     char dept[DEPT_LETTERS + 1];
     char number[COURSE_NUMBERS + 1];
@@ -29,6 +33,10 @@ struct CourseStruct {
 };
 typedef struct CourseStruct Course;
 
+/** 
+    This is the catalog struct it holds a pointer to an array of pointers that points
+    to courses, a count for the number of courses, and a capacity for the array of pointers.
+*/
 struct CatalogStruct {
     Course **list;
     int count;

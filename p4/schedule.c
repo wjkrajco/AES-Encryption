@@ -1,3 +1,11 @@
+/** 
+    @file schedule.c
+    @author William J Krjacovic (wjkrajco)
+    This is the primary file for the program as it contains the main function. This file
+    is responsible for reading in the input from the user as commands and not the file. This file
+    makes sure all the commands the user enters are valid, this file also holds the test and
+    comparing functions that are called to in order to sort the catalog and schedule.
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -7,9 +15,51 @@
 #include "input.h"
 #include "catalog.h"
 
+/** The Size for the string that will hold the second command*/
+#define SIZE_FOR_SECOND_COMMAND_STRING 12
+
+/** The common size string in command*/
+#define SIZE_FOR_COMMON_COMMAND_STRING 7
+
+/** The small size string in command*/
+#define SIZE_FOR_SMALL_COMMAND_STRING 4
+
+/**Value for 8:30*/
+#define VALUE_FOR_SMALLEST_TIME 5
+
+/**Value for 10:00*/
+#define VALUE_FOR_SECOND_SMALLEST_TIME 4
+
+/**Value for 11:30*/
+#define VALUE_FOR_THIRD_SMALLEST_TIME 3
+
+/**Value for 1:00*/
+#define VALUE_FOR_FOURTH_SMALLEST_TIME 2
+
+/**Value for 2:30*/
+#define VALUE_FOR_FIFTH_SMALLEST_TIME 1
+
+/**Value for 4:00*/
+#define VALUE_FOR_LARGEST_TIME 0
+
+/**Size of Department String*/
+#define SIZE_OF_DEPARTMENT_STRING 3
+
+/**Size of schedule array*/
+#define SCHEDULE_SIZE 10
 
 
 
+
+
+
+/** 
+    This function processes the arguments that were given into the program and makes sure
+    there is at least a file for the program to read.
+
+    @param argc the number of arguments that were given when running the program.
+    @param argv An array of strings that were the arguments given at start
+*/
 static void processArgs(int argc, char*argv[])  
 {
     if ((argc - 1) < 1)  {
@@ -19,28 +69,14 @@ static void processArgs(int argc, char*argv[])
 
 }
 
-// int main(int argc, char *argv[]) 
-// {
-//     makeCatalog();
-//     processArgs(argc, argv);
+/** 
+    This function takes in two course void pointers and compares them by
+    their department and number returning an int to show which should come first.
 
-//     for (int i = 1; i < argc; i++)  {
-//         FILE *fp = fopen(argv[i], "r");
-//         if (!fp)  {
-//             fprintf( stderr, "Can't open file: %s\n", argv[i] );
-//             exit(1);
-//         }
-//         char *line;
-//         while ((line = readLine(fp)) != NULL)  {
-//             printf ("%s\n", line);
-//             free(line);
-//         }
-//         fclose(fp);
-//     }
-//     freeCatalog(catalog);
-//     return EXIT_SUCCESS;
-// }
-
+    @param va A void pointer that will be used as a course.
+    @param vb A void pointer that will be used as a course.
+    @return An int 1 to show va should be first, -1 for vb, and a 0 for va and vb being equal
+*/
 static int compareListCourses(const void *va, const void *vb)
 {
     const Course *a = *(const Course**)va;
@@ -67,13 +103,28 @@ static int compareListCourses(const void *va, const void *vb)
 
 }
 
+/** 
+    Only returns true to print the course every time
+
+    @param course A pointer to a course that will be tested to see if it should be printed
+    @param str1 String 1 that will be used to see if the course should be printed.
+    @param str2 String 2 that will be used to see if the course should be printed.
+    @return Return true if the course should be printed and false if not
+*/
 static bool testList(Course const *course, char const *str1, char const *str2)  
 {
     return true;
 }
 
 
+/** 
+    This function takes in two course void pointers and compares them by
+    their names returning an int to show which should come first.
 
+    @param va A void pointer that will be used as a course.
+    @param vb A void pointer that will be used as a course.
+    @return An int 1 to show va should be first, -1 for vb, and a 0 for va and vb being equal
+*/
 static int compareListNames(const void *va, const void *vb)  
 {
     const Course *a = *(const Course**)va;
@@ -98,7 +149,14 @@ static int compareListNames(const void *va, const void *vb)
 }
 
 
+/** 
+    This function takes in two course void pointers and compares them by
+    their days and time returning an int to show which should come first.
 
+    @param va A void pointer that will be used as a course.
+    @param vb A void pointer that will be used as a course.
+    @return An int 1 to show va should be first, -1 for vb, and a 0 for va and vb being equal
+*/
 static int compareListSchedule(const void *va, const void *vb)  
 {
     const Course *a = *(const Course**)va;
@@ -117,41 +175,41 @@ static int compareListSchedule(const void *va, const void *vb)
     else  {
 
         if (strcmp(a->time, "8:30") == 0)  {
-            aTime = 5;
+            aTime = VALUE_FOR_SMALLEST_TIME;
         }
         else if (strcmp(a->time, "10:00") == 0) {
-            aTime = 4;
+            aTime = VALUE_FOR_SECOND_SMALLEST_TIME;
         } 
         else if (strcmp(a->time, "11:30") == 0) {
-            aTime = 3;
+            aTime = VALUE_FOR_THIRD_SMALLEST_TIME;
         }
         else if (strcmp(a->time, "1:00") == 0) {
-            aTime = 2;
+            aTime = VALUE_FOR_FOURTH_SMALLEST_TIME;
         }
         else if (strcmp(a->time, "2:30") == 0) {
-            aTime = 1;
+            aTime = VALUE_FOR_FIFTH_SMALLEST_TIME;
         }
         else {
-            aTime = 0;
+            aTime = VALUE_FOR_LARGEST_TIME;
         }
 
         if (strcmp(b->time, "8:30") == 0)  {
-            bTime = 5;
+            bTime = VALUE_FOR_SMALLEST_TIME;
         }
         else if (strcmp(b->time, "10:00") == 0) {
-            bTime = 4;
+            bTime = VALUE_FOR_SECOND_SMALLEST_TIME;
         } 
         else if (strcmp(b->time, "11:30") == 0) {
-            bTime = 3;
+            bTime = VALUE_FOR_THIRD_SMALLEST_TIME;
         }
         else if (strcmp(b->time, "1:00") == 0) {
-            bTime = 2;
+            bTime = VALUE_FOR_FOURTH_SMALLEST_TIME;
         }
         else if (strcmp(b->time, "2:30") == 0) {
-            bTime = 1;
+            bTime = VALUE_FOR_FIFTH_SMALLEST_TIME;
         }
         else if (strcmp(b->time, "4:00") == 0) {
-            bTime = 0;
+            bTime = VALUE_FOR_LARGEST_TIME;
         }
         else {
             printf("PROBLEM");
@@ -167,23 +225,22 @@ static int compareListSchedule(const void *va, const void *vb)
             return 0;
         }
 
-        // int idNum = atoi(a->number) - atoi(b->number);
-        // if (idNum > 0) {
-        //     return 1;
-        // }
-        // else {
-        //     return -1;
-        // }
     }
     return 0;
 }
 
+/** 
+    Checks if the string follows the department format for courses.
+
+    @param str The string being checked to see if it follows the department format
+    @return True str is a proper string for a department
+*/
 static bool isDepartment(char *str)    
 {
-    if (strlen(str) != 3)    {
+    if (strlen(str) != DEPT_LETTERS)    {
         return false;
     }
-    for (int i = 0; i < 3; ++i)  {
+    for (int i = 0; i < DEPT_LETTERS; ++i)  {
         if (!isupper(str[i])) {
             return false;
         }
@@ -191,12 +248,18 @@ static bool isDepartment(char *str)
     return true;
 }
 
+/** 
+    Checks if the string follows the number format for courses.
+
+    @param str The string being checked to see if it follows the number format
+    @return True str is a proper string for a number
+*/
 static bool isNumber(char *str)    
 {
-    if (strlen(str) != 3)    {
+    if (strlen(str) != COURSE_NUMBERS)    {
         return false;
     }
-    for (int i = 0; i < 3; ++i)  {
+    for (int i = 0; i < COURSE_NUMBERS; ++i)  {
         if (!isdigit(str[i])) {
             return false;
         }
@@ -204,6 +267,15 @@ static bool isNumber(char *str)
     return true;
 }
 
+/** 
+    Checks if the course has the same department so if str1 and the department of the course are the same
+    if they are the course should be printed.
+
+    @param course A pointer to a course that will be tested to see if it should be printed
+    @param str1 String 1 that will be used to see if the course should be printed.
+    @param str2 String 2 that will be used to see if the course should be printed.
+    @return Return true if the course should be printed and false if not
+*/
 static bool testListDepartment(Course const *course, char const *str1, char const *str2)  
 {
     const Course *a = course;
@@ -215,10 +287,21 @@ static bool testListDepartment(Course const *course, char const *str1, char cons
     }
 }
 
+/** 
+    Checks if a department and number from str1 and str2 exist in the catalog and if they do exist in the catalog
+    check if they are able to be added to the schedule.
+
+    @param schedule The array of courses in the schedule to check for dupplicates or same time and day.
+    @param catalog A pointer to a that may hold a course corresponding with str1 and str2.
+    @param courses The number of courses in schedule.
+    @param str1 String 1 that will be used to see if a course can be added.
+    @param str2 String 2 that will be used to see if a course can be added.
+    @return Return true if a course should be added to the schedule.
+*/
 static bool canGoInSchedule(Course* schedule[], Catalog *catalog, int courses, char *str1, char *str2)  {
     int catalogIndex = -1;
     bool isInCatalog = false;
-    if (courses >= 10)  {
+    if (courses >= SCHEDULE_SIZE)  {
         return false;
     }
     for (int i = 0; i < catalog->count; i++)  {
@@ -242,6 +325,16 @@ static bool canGoInSchedule(Course* schedule[], Catalog *catalog, int courses, c
     return true;
 }
 
+/** 
+    Finds the index in the schedule where the given dept str1 and number str2 match to help to remove
+    the course from the schedule.
+
+    @param schedule The array of courses in the schedule to check for str1 and str2.
+    @param courses The number of courses in schedule.
+    @param str1 String 1 that will be used to see if a course can be dropped.
+    @param str2 String 2 that will be used to see if a course can be dropped.
+    @return Return the index of the course in schedule or -1 if nothing was found.
+*/
 static int indexInSchedule(Course* schedule[], int courses, char *str1, char *str2)  {
     for (int i = 0; i < courses; i++)  {
         if ((strcmp(schedule[i]->dept, str1) == 0) && (strcmp(schedule[i]->number, str2) == 0))  {
@@ -251,6 +344,12 @@ static int indexInSchedule(Course* schedule[], int courses, char *str1, char *st
     return -1;
 }
 
+/** 
+    Prints out the courses that are in the schedule.
+
+    @param schedule The array of courses in the schedule.
+    @param courses The number of courses in schedule.
+*/
 void listSchedule(Course* schedule[], int courses)  {
     printf("Course  Name                           Timeslot\n");
     for (int i = 0; i < courses; ++i)  {
@@ -259,12 +358,27 @@ void listSchedule(Course* schedule[], int courses)  {
     printf("%c", '\n');
 }
 
+/** 
+    Prints out the courses that are in the schedule.
+
+    @param schedule The array of courses in the schedule.
+    @param courses The number of courses in schedule.
+*/
 void sortSchedule( Course* schedule[], int courses, int (* compare) (void const *va, void const *vb ))  
 {
     qsort(schedule, courses, sizeof(Course*), compare);
 
 }
 
+/** 
+    Checks if the course has the same time and day so if str1 and the days of the course are the same
+    and if str2 and the time of the course are the same then they should be printed.
+
+    @param course A pointer to a course that will be tested to see if it should be printed.
+    @param str1 String 1 that will be used to see if the course should be printed.
+    @param str2 String 2 that will be used to see if the course should be printed.
+    @return Return true if the course should be printed and false if not.
+*/
 static bool testTimeSlot(Course const *course, char const *str1, char const *str2)  
 {
     const Course *a = course;
@@ -277,13 +391,21 @@ static bool testTimeSlot(Course const *course, char const *str1, char const *str
 }
 
 
+/** 
+    This is the main function and does most of the work of the program by takingin input from the user
+    and using that input to read files, add courses, drop courses, and list out courses in different sorted
+    orderings.
 
+    @param argc the number of arguments that were given when running the program.
+    @param argv An array of strings that were the arguments given at start.
+    @return 0 for a succesful exit and not 0 for a failed one.
+*/
 int main(int argc, char *argv[]) 
 {
 
     Catalog *catalog = makeCatalog();
-    Course* schedule[10];
-    for (int i = 0; i < 10; i++) {
+    Course* schedule[SCHEDULE_SIZE];
+    for (int i = 0; i < SCHEDULE_SIZE; i++) {
         schedule[i] = NULL;
     }
     int courseCounter = 0;
@@ -302,15 +424,15 @@ int main(int argc, char *argv[])
         }
         
 
-        char first[7];
+        char first[SIZE_FOR_COMMON_COMMAND_STRING];
         memset(first, '\0',sizeof(first));
-        char second[12];
+        char second[SIZE_FOR_SECOND_COMMAND_STRING];
         memset(second, '\0',sizeof(second));
-        char third[4];
+        char third[SIZE_FOR_SMALL_COMMAND_STRING];
         memset(third, '\0',sizeof(third));
-        char fourth[7];
+        char fourth[SIZE_FOR_COMMON_COMMAND_STRING];
         memset(fourth, '\0',sizeof(fourth));
-        char fifth[7];
+        char fifth[SIZE_FOR_COMMON_COMMAND_STRING];
         memset(fifth, '\0',sizeof(fifth));
 
         if (line == NULL) {
@@ -375,7 +497,7 @@ int main(int argc, char *argv[])
             }
             third[3] = '\0';
             if (strcmp(first, "add") == 0)  {
-                if (strlen(second) != 3) {
+                if (strlen(second) != DEPT_LETTERS) {
                     printf("%s\n\n", "Invalid command");
                     free(line);
                     continue; 
@@ -399,7 +521,7 @@ int main(int argc, char *argv[])
                 }
             }
             else if (strcmp(first, "drop") == 0)  {
-                if (strlen(second) != 3) {
+                if (strlen(second) != DEPT_LETTERS) {
                     printf("%s\n\n", "Invalid command");
                     free(line);
                     continue;  
@@ -468,13 +590,6 @@ int main(int argc, char *argv[])
             continue; 
         }
     }
-
-
-
-
-
-
-
 
     freeCatalog(catalog);
     return EXIT_SUCCESS;

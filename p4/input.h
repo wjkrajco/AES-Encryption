@@ -6,12 +6,10 @@
 */
 
 /** The initial capacity of the string used to read line */
-#define INITIAL_CAPACITY 5;
+#define INITIAL_CAPACITY 5
 
 /** The number the capacity if multiplied when changing size */
-#define STRING_MULTIPLICATION 2;
-
-
+#define STRING_MULTIPLICATION 2
 
 /** 
     This function reads a single line of input from the given input stream (stdin or a file) and returns 
