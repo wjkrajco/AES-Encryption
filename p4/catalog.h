@@ -20,16 +20,44 @@
 /**The max number of letters name for the course*/
 #define MAX_NAME 30
 
+/**Total size of dept*/
+#define DEPT_TOTAL 4
+
+/**Total size of dept*/
+#define NUMBERS_TOTAL 4
+
+/**Total size of dept*/
+#define DAYS_TOTAL 3
+
+/**Total size of dept*/
+#define TIME_TOTAL 6
+
+/**Total size of dept*/
+#define NAME_TOTAL 31
+
+/** Small size for course time */
+#define SMALL_COURSE_TIME 3
+
+/** Used to increment of two letters in a string*/
+#define TWO_LETTER_INCREMENT 2
+
+/** Used to increment of three letters in a string*/
+#define THREE_LETTER_INCREMENT 3
+
+/** Used to increment of four letters in a string*/
+#define FOUR_LETTER_INCREMENT 4
+
+
 /** 
     This is the course struct it holds strings for department, course number,
     days, time and the name of the course.
 */
 struct CourseStruct {
-    char dept[DEPT_LETTERS + 1];
-    char number[COURSE_NUMBERS + 1];
-    char days[COURSE_DAYS + 1];
-    char time[COURSE_TIME + 1];
-    char name[MAX_NAME + 1];
+    char dept[DEPT_TOTAL];
+    char number[NUMBERS_TOTAL];
+    char days[DAYS_TOTAL];
+    char time[TIME_TOTAL];
+    char name[NAME_TOTAL];
 };
 typedef struct CourseStruct Course;
 

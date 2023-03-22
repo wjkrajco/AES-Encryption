@@ -21,7 +21,7 @@ Catalog *makeCatalog()
 {
     Catalog *catalog = malloc(sizeof(Catalog));
     catalog->count = 0;
-    catalog->capacity = 5;
+    catalog->capacity = INITIAL_CAPACITY;
     catalog->list = malloc(catalog->capacity * sizeof(Course *));
     return catalog;
 }
@@ -56,8 +56,8 @@ void readCourses(char const *filename, Catalog *catalog)
 
 
         if (catalog->count == catalog->capacity) {
-            catalog->list = realloc(catalog->list, (catalog->capacity * 2) * sizeof(Course *));
-            catalog->capacity = catalog->capacity * 2;
+            catalog->list = realloc(catalog->list, (catalog->capacity * STRING_MULTIPLICATION) * sizeof(Course *));
+            catalog->capacity = catalog->capacity * STRING_MULTIPLICATION;
 
         }
 
@@ -77,10 +77,10 @@ void readCourses(char const *filename, Catalog *catalog)
         for (int i = 0; str[i] != '\0'; i++)  {
 
             if (!isspace(str[i]) && (whiteSpace || !dept))  {
-                if (!dept && strlen(str) > i + 4)  {
-                    char deptStr[4];
-                    deptStr[3] = '\0';
-                    for (int j  = 0; j < 3; j++)  {
+                if (!dept && strlen(str) > i + DEPT_TOTAL)  {
+                    char deptStr[DEPT_TOTAL];
+                    deptStr[DEPT_LETTERS] = '\0';
+                    for (int j  = 0; j < DEPT_LETTERS; j++)  {
                         if (isupper(str[i + j]))  {
                             deptStr[j] = str[i + j];
                         }
@@ -90,15 +90,14 @@ void readCourses(char const *filename, Catalog *catalog)
                         }
                     }
                     strncpy(course->dept, deptStr, sizeof(course->dept) - 1);
-                    // strncpy(newCourse->dept, deptStr, sizeof(newCourse->dept) - 1);
                     whiteSpace = false;
                     dept = true;
-                    i += 2;
+                    i += DEPT_LETTERS - 1;
                 }
-                else if (!num && (strlen(str) > i + 4) && whiteSpace)  {
-                    char numStr[4];
-                    numStr[3] = '\0';
-                    for (int j  = 0; j < 3; j++)  {
+                else if (!num && (strlen(str) > i + NUMBERS_TOTAL) && whiteSpace)  {
+                    char numStr[NUMBERS_TOTAL];
+                    numStr[COURSE_NUMBERS] = '\0';
+                    for (int j  = 0; j < COURSE_NUMBERS; j++)  {
                         if (isdigit(str[i + j]))  {
                             numStr[j] = str[i + j];
                         }
@@ -108,15 +107,14 @@ void readCourses(char const *filename, Catalog *catalog)
                         }
                     }
                     strncpy(course->number, numStr, sizeof(course->number) - 1);
-                    // strcpy(courses[courseCounter - 1].number, numStr);
                     whiteSpace = false;
                     num = true;
-                    i += 2;
+                    i += COURSE_NUMBERS - 1;
 
                 }
-                else if (!days && (strlen(str) > i + 3) && whiteSpace)  {
-                    char daysStr[3];
-                    daysStr[2] = '\0';
+                else if (!days && (strlen(str) > i + DAYS_TOTAL) && whiteSpace)  {
+                    char daysStr[DAYS_TOTAL];
+                    daysStr[COURSE_DAYS] = '\0';
                     if ((str[i] == 'M' && str[i + 1] == 'W') || (str[i] == 'T' && str[i + 1] == 'H'))  {
                         daysStr[0] = str[i];
                         daysStr[1] = str[i + 1];
@@ -128,29 +126,29 @@ void readCourses(char const *filename, Catalog *catalog)
                     // strcpy(courses[courseCounter - 1].days, daysStr);
                     whiteSpace = false;
                     days = true;
-                    i += 1;
-                } else if (!time && (strlen(str) > i + 6) && whiteSpace)  {
-                    char timeStr[6];
-                    timeStr[5] = '\0';
-                    if ((str[i] == '1' && str[i + 1] == '0' && str[i + 2] == ':' && str[i + 3] == '0'  && str[i + 4] == '0') ||
-                          (str[i] == '1' && str[i + 1] == '1' && str[i + 2] == ':' && str[i + 3] == '3'  && str[i + 4] == '0'))  {
+                    i += COURSE_DAYS - 1;
+                } else if (!time && (strlen(str) > i + TIME_TOTAL) && whiteSpace)  {
+                    char timeStr[TIME_TOTAL];
+                    timeStr[COURSE_TIME] = '\0';
+                    if ((str[i] == '1' && str[i + 1] == '0' && str[i + TWO_LETTER_INCREMENT] == ':' && str[i + THREE_LETTER_INCREMENT] == '0'  && str[i + FOUR_LETTER_INCREMENT] == '0') ||
+                          (str[i] == '1' && str[i + 1] == '1' && str[i + TWO_LETTER_INCREMENT] == ':' && str[i + THREE_LETTER_INCREMENT] == '3'  && str[i + FOUR_LETTER_INCREMENT] == '0'))  {
                         timeStr[0] = str[i];
                         timeStr[1] = str[i + 1];
-                        timeStr[2] = str[i + 2]; 
-                        timeStr[3] = str[i + 3];       
-                        timeStr[4] = str[i + 4];
-                        i += 4;               
+                        timeStr[TWO_LETTER_INCREMENT] = str[i + TWO_LETTER_INCREMENT]; 
+                        timeStr[THREE_LETTER_INCREMENT] = str[i + THREE_LETTER_INCREMENT];       
+                        timeStr[FOUR_LETTER_INCREMENT] = str[i + FOUR_LETTER_INCREMENT];
+                        i += COURSE_TIME - 1;               
 
-                    } else if ((str[i] == '4' && str[i + 1] == ':' && str[i + 2] == '0' && str[i + 3] == '0') ||
-                          (str[i] == '8' && str[i + 1] == ':' && str[i + 2] == '3' && str[i + 3] == '0') || 
-                            (str[i] == '1' && str[i + 1] == ':' && str[i + 2] == '0' && str[i + 3] == '0') || 
-                              (str[i] == '2' && str[i + 1] == ':' && str[i + 2] == '3' && str[i + 3] == '0')) {
+                    } else if ((str[i] == '4' && str[i + 1] == ':' && str[i + TWO_LETTER_INCREMENT] == '0' && str[i + THREE_LETTER_INCREMENT] == '0') ||
+                          (str[i] == '8' && str[i + 1] == ':' && str[i + TWO_LETTER_INCREMENT] == '3' && str[i + THREE_LETTER_INCREMENT] == '0') || 
+                            (str[i] == '1' && str[i + 1] == ':' && str[i + TWO_LETTER_INCREMENT] == '0' && str[i + THREE_LETTER_INCREMENT] == '0') || 
+                              (str[i] == '2' && str[i + 1] == ':' && str[i + TWO_LETTER_INCREMENT] == '3' && str[i + THREE_LETTER_INCREMENT] == '0')) {
                         timeStr[0] = str[i];
                         timeStr[1] = str[i + 1];
-                        timeStr[2] = str[i + 2]; 
-                        timeStr[3] = str[i + 3];
-                        timeStr[4] = '\0';
-                        i += 3;
+                        timeStr[TWO_LETTER_INCREMENT] = str[i + TWO_LETTER_INCREMENT]; 
+                        timeStr[THREE_LETTER_INCREMENT] = str[i + THREE_LETTER_INCREMENT];
+                        timeStr[FOUR_LETTER_INCREMENT] = '\0';
+                        i += SMALL_COURSE_TIME;
 
                     } else { 
                         fprintf( stderr, "Invalid course file: %s\n", filename );
@@ -162,25 +160,24 @@ void readCourses(char const *filename, Catalog *catalog)
                     time = true;
                 }
                 else if (!name && whiteSpace)  {
-                    char nameStr[31];
-                    nameStr[30] = '\0';
+                    char nameStr[NAME_TOTAL];
+                    nameStr[MAX_NAME] = '\0';
                     int counter = 0;
-                    for (int j = 0; (str[j + i] != '\0') && ((j) < 30); ++j)  {
+                    for (int j = 0; (str[j + i] != '\0') && ((j) < MAX_NAME); ++j)  {
                         nameStr[j] = str[j + i];
                         counter++;
                     }
-                    if(counter == 30)  {
-                        if (str[30 + i] != '\0')  {
+                    if(counter == MAX_NAME)  {
+                        if (str[MAX_NAME + i] != '\0')  {
                           fprintf( stderr, "Invalid course file: %s\n", filename );
                           exit(1);  
                         }
                     }
                     else {
-                        for (int k = counter; k < 30; ++k)  {
+                        for (int k = counter; k < MAX_NAME; ++k)  {
                             nameStr[k] = '\0';
                         }
                         strncpy(course->name, nameStr, sizeof(course->name) - 1);
-                        // strcpy(courses[courseCounter - 1].name, nameStr);
                         whiteSpace = false;
                         name = true;
                         i += counter - 1;

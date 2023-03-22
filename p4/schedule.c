@@ -48,6 +48,17 @@
 /**Size of schedule array*/
 #define SCHEDULE_SIZE 10
 
+/**Number for three arguments*/
+#define TWO_ARGUMENTS_READ 2
+
+/**Number for three arguments*/
+#define THREE_ARGUMENTS_READ 3
+
+/**Number for four arguments*/
+#define FOUR_ARGUMENTS_READ 4
+
+
+
 
 
 
@@ -457,7 +468,7 @@ int main(int argc, char *argv[])
                 continue;
             }
         }
-        else if (sscanf(line, "%s %s %s %s %s", first, second, third, fourth, fifth) == 2)  {
+        else if (sscanf(line, "%s %s %s %s %s", first, second, third, fourth, fifth) == TWO_ARGUMENTS_READ)  {
             if (strcmp(first, "list") == 0)  {
                 if (strcmp(second, "courses") == 0)  {
                     free(line);
@@ -489,20 +500,20 @@ int main(int argc, char *argv[])
                 continue;
             }
         }
-        else if (sscanf(line, "%s %s %s %s %s", first, second, third, fourth, fifth) == 3) {
-            if (strlen(third) != 3)  {
+        else if (sscanf(line, "%s %s %s %s %s", first, second, third, fourth, fifth) == THREE_ARGUMENTS_READ) {
+            if (strlen(third) != COURSE_NUMBERS)  {
                 printf("%s\n\n", "Invalid command");
                 free(line);
                 continue; 
             }
-            third[3] = '\0';
+            third[COURSE_NUMBERS] = '\0';
             if (strcmp(first, "add") == 0)  {
                 if (strlen(second) != DEPT_LETTERS) {
                     printf("%s\n\n", "Invalid command");
                     free(line);
                     continue; 
                 }
-                second[3] = '\0';
+                second[DEPT_LETTERS] = '\0';
                 if (isDepartment(second) && isNumber(third) && canGoInSchedule(schedule, catalog, courseCounter, second, third))  {
                     printf("%c", '\n');
                     free(line);
@@ -526,7 +537,7 @@ int main(int argc, char *argv[])
                     free(line);
                     continue;  
                 }
-                second[3] = '\0';
+                second[DEPT_LETTERS] = '\0';
 
                 if (isDepartment(second) && isNumber(third) && (indexInSchedule(schedule, courseCounter, second, third) >= 0)) {
                     printf("%c", '\n');
@@ -569,7 +580,7 @@ int main(int argc, char *argv[])
                 free(line);
                 continue;   
             }
-        } else if (sscanf(line, "%s %s %s %s %s", first, second, third, fourth, fifth) == 4)  {
+        } else if (sscanf(line, "%s %s %s %s %s", first, second, third, fourth, fifth) == FOUR_ARGUMENTS_READ)  {
             if ((strcmp(first, "list") == 0) && (strcmp(second, "timeslot") == 0) && ((strcmp(third, "MW") == 0) || (strcmp(third, "TH") == 0)) &&
                 ((strcmp(fourth, "8:30") == 0) || (strcmp(fourth, "10:00") == 0) || (strcmp(fourth, "11:30") == 0) || (strcmp(fourth, "1:00") == 0) ||
                     (strcmp(fourth, "2:30") == 0) || (strcmp(fourth, "4:00") == 0)))  {
