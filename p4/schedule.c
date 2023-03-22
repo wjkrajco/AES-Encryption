@@ -57,6 +57,12 @@
 /**Number for four arguments*/
 #define FOUR_ARGUMENTS_READ 4
 
+/**The size of dept and number array*/
+#define DEPT_AND_NUMBER_TOTAL
+
+/** The size of dept and number with a space between*/
+#define DEPT_AND_NUMBER_SPACE 7
+
 
 
 
@@ -405,30 +411,30 @@ static bool testTimeSlot(Course const *course, char const *str1, char const *str
 
 static void printCalendar(Course* schedule[], int courses)
 {
-    char str1[8] = "        ";
-    str1[7] = '\0';
-    char str2[8] = "        ";
-    str2[7] = '\0';
-    char str3[8] = "        ";
-    str3[7] = '\0';
-    char str4[8] = "        ";
-    str4[7] = '\0';
-    char str5[8] = "        ";
-    str5[7] = '\0';
-    char str6[8] = "        ";
-    str6[7] = '\0';
-    char str7[8] = "        ";
-    str7[7] = '\0';
-    char str8[8] = "        ";
-    str8[7] = '\0';
-    char str9[8] = "        ";
-    str9[7] = '\0';
-    char str10[8] = "        ";
-    str10[7] = '\0';
-    char str11[8] = "        ";
-    str11[7] = '\0';
-    char str12[8] = "        ";
-    str12[7] = '\0';
+    char str1[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str1[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str2[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str2[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str3[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str3[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str4[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str4[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str5[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str5[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str6[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str6[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str7[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str7[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str8[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str8[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str9[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str9[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str10[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str10[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str11[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str11[DEPT_AND_NUMBER_SPACE] = '\0';
+    char str12[DEPT_AND_NUMBER_TOTAL] = "        ";
+    str12[DEPT_AND_NUMBER_SPACE] = '\0';
 
 
     for (int i = 0; i < courses; i++)  {
