@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "io.h"
 #include "field.h"
 #include "aes.h"
@@ -19,9 +20,34 @@
 /**The multiples of 16 bytes that every file size should be*/
 #define SIXTEEN_BYTES 16
 
+/** 
+    This function gets the size of the file, which would be the number of bytes that will be taken up in the array.
+    This is designed for the extra credit to help with when to know to add padding.
+    @param filename the name of the file being checked with size.
+    @return the number of bytes in the file.
+*/
+static int getFileSize(char const *filename)  
+{
+    int fileSize = 0;
+    FILE *fp = fopen(filename, "rb");
+    if (!fp)  {
+        fprintf(stderr, "Can't open file: %s\n", filename);
+        exit(1);
+    }
+
+    fseek(fp, 0, SEEK_END);
+    fileSize = ftell(fp);
+    rewind(fp);
+    fclose(fp);
+
+    return fileSize;
+}
+
 int main(int argc, char *argv[])
 {
     int numberOfBlocks = 0;
+
+
 
     if ((argc - 1) != NUM_ARGUMENTS)  {
         fprintf(stderr, "usage: decrypt <key-file> <input-file> <output-file>\n");
@@ -29,30 +55,36 @@ int main(int argc, char *argv[])
     }
 
     int keySize = 0;
-    byte *keyArr = readBinaryFile(argv[1], &keySize);
+    keySize = getFileSize(argv[1]);
     if (keySize != SIXTEEN_BYTES)  {
         fprintf(stderr, "Bad key file: %s\n", argv[1]);
         exit(1);
     }
+    byte *keyArr = readBinaryFile(argv[1], &keySize);
 
-    int plainTextSize = 0;
-    byte *plainArr = readBinaryFile(argv[NUM_ARGUMENTS - 1], &plainTextSize);
-    if ((plainTextSize % SIXTEEN_BYTES) != 0)  {
-        fprintf(stderr, "Bad plaintext file length: %s\n", argv[NUM_ARGUMENTS - 1]);
+
+    int cipherSize = 0;
+    byte *cipherArr = readBinaryFile(argv[NUM_ARGUMENTS - 1], &cipherSize);
+    if ((cipherSize % SIXTEEN_BYTES) != 0)  {
+        fprintf(stderr, "Bad ciphertext file length: %s\n", argv[NUM_ARGUMENTS - 1]);
         exit(1);
     }
 
-    numberOfBlocks = plainTextSize / SIXTEEN_BYTES;
+    numberOfBlocks = cipherSize / SIXTEEN_BYTES;
 
     for (int i = 0; i < numberOfBlocks; i++) {
-        decryptBlock(plainArr + i * SIXTEEN_BYTES, keyArr);
+        decryptBlock(cipherArr + i * SIXTEEN_BYTES, keyArr);
+    }
+    
+    int newSize = cipherSize;
+    while (newSize > 0 && cipherArr[newSize - 1] == 0) {
+        newSize--;
     }
 
-
-    writeBinaryFile(argv[NUM_ARGUMENTS], plainArr, plainTextSize);
+    writeBinaryFile(argv[NUM_ARGUMENTS], cipherArr, newSize);
 
     free(keyArr);
-    free(plainArr);
+    free(cipherArr);
 
     return EXIT_SUCCESS;
 }

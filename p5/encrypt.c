@@ -17,6 +17,29 @@
 /**The multiples of 16 bytes that every file size should be*/
 #define SIXTEEN_BYTES 16
 
+/** 
+    This function gets the size of the file, which would be the number of bytes that will be taken up in the array.
+    This is designed for the extra credit to help with when to know to add padding.
+    @param filename the name of the file being checked with size.
+    @return the number of bytes in the file.
+*/
+static int getFileSize(char const *filename)  
+{
+    int fileSize = 0;
+    FILE *fp = fopen(filename, "rb");
+    if (!fp)  {
+        fprintf(stderr, "Can't open file: %s\n", filename);
+        exit(1);
+    }
+
+    fseek(fp, 0, SEEK_END);
+    fileSize = ftell(fp);
+    rewind(fp);
+    fclose(fp);
+
+    return fileSize;
+}
+
 int main(int argc, char *argv[])
 {
     int numberOfBlocks = 0;
@@ -27,6 +50,11 @@ int main(int argc, char *argv[])
     }
 
     int keySize = 0;
+    keySize = getFileSize(argv[1]);
+    if (keySize != SIXTEEN_BYTES)  {
+        fprintf(stderr, "Bad key file: %s\n", argv[1]);
+        exit(1);
+    }
     byte *keyArr = readBinaryFile(argv[1], &keySize);
     if (keySize != SIXTEEN_BYTES)  {
         fprintf(stderr, "Bad key file: %s\n", argv[1]);

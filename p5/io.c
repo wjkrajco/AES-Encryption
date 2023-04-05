@@ -19,8 +19,15 @@ byte *readBinaryFile( char const *filename, int *size )
     }
 
     fseek(fp, 0, SEEK_END);
-    *size = ftell(fp);
+    int beginningSize = ftell(fp);
     rewind(fp);
+
+    int paddingSize = beginningSize;
+    if (beginningSize % USUAL_BINARY_SIZE != 0)  {
+      paddingSize = (beginningSize / USUAL_BINARY_SIZE + 1) * USUAL_BINARY_SIZE;
+    }
+
+    *size = paddingSize;
 
     byte *values = (byte *)malloc((*size) * sizeof(byte));
 
@@ -33,6 +40,10 @@ byte *readBinaryFile( char const *filename, int *size )
         numberOfValues += numbersRead;
     }
     fclose(fp);
+
+    for (int i = beginningSize; i < paddingSize; i++)  {
+      values[i] = 0;
+    }
 
     return values;
 }

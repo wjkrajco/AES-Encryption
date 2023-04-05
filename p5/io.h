@@ -7,6 +7,9 @@
 
 #include "field.h"
 
+/** The expected size for the binary files*/
+#define USUAL_BINARY_SIZE 16
+
 
 /** 
     This function takes in a filename and a size and reads a binary
