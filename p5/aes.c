@@ -325,4 +325,3 @@ void decryptBlock(byte data[BLOCK_SIZE], byte key[BLOCK_SIZE]) {
   }
   addSubkey(data, subkey[0]);
 }
-

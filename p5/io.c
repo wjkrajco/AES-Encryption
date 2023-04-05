@@ -48,4 +48,3 @@ void writeBinaryFile(const char *filename, byte *data, int size) {
     exit(1);
   }
 }
-
