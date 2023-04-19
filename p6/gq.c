@@ -18,7 +18,7 @@
 
 
 /** Holds the size for the char array for the first command*/
-#define SIZE_FOR_FIRST_COMMAND 10
+#define SIZE_FOR_FIRST_COMMAND 100
 
 /** The number of commands given at a time that are allowed*/
 #define MAX_INPUTS_ALLOWED 2
